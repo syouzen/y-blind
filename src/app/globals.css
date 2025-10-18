@@ -14,6 +14,109 @@
   --font-mono: var(--font-geist-mono);
 }
 
+@theme {
+  --desktop-width: 728px;
+  --mobile-width: 480px;
+
+  /* Primary Color */
+  --color-white: #ffffff;
+
+  --color-pink: #ff2488;
+  --color-pink50: #fff0f5;
+  --color-pink100: #ffe9f1;
+  --color-pink200: #ffd4e4;
+  --color-pink300: #ffc1dd;
+  --color-pink400: #ffa3cd;
+  --color-pink500: #ff82bb;
+  --color-pink600: #ff62aa;
+  --color-pink700: #ff2488;
+  --color-pink800: #ed2580;
+  --color-pink900: #d60062;
+
+  /* Blue Color */
+  --color-blue50: #f0f7ff;
+  --color-blue100: #deedff;
+  --color-blue200: #b6d7ff;
+  --color-blue300: #8dc1ff;
+  --color-blue400: #6eb1ff;
+  --color-blue500: #4a9dff;
+  --color-blue600: #2489ff;
+  --color-blue700: #0b73ee;
+  --color-blue800: #005ece;
+  --color-blue900: #044590;
+
+  /* Sky Color */
+  --color-sky50: #e9fbff;
+  --color-sky100: #d0f7ff;
+  --color-sky200: #9bebff;
+  --color-sky300: #64dcfa;
+  --color-sky400: #3ecae9;
+  --color-sky500: #0db2d7;
+  --color-sky600: #0b9bc7;
+  --color-sky700: #037da2;
+  --color-sky800: #066683;
+  --color-sky900: #005169;
+
+  /* Green Color */
+  --color-green50: #f1ffd2;
+  --color-green100: #e8fbbd;
+  --color-green200: #d3f39a;
+  --color-green300: #bce77d;
+  --color-green400: #9dd754;
+  --color-green500: #7bcc24;
+  --color-green600: #67bb00;
+  --color-green700: #579e00;
+  --color-green800: #51890b;
+  --color-green900: #416e0a;
+
+  /* Yellow Color */
+  --color-yellow50: #fffad5;
+  --color-yellow100: #fff7bd;
+  --color-yellow200: #fff39b;
+  --color-yellow300: #ffe676;
+  --color-yellow400: #ffd65a;
+  --color-yellow500: #fcbc17;
+  --color-yellow600: #faa60a;
+  --color-yellow700: #f19500;
+  --color-yellow800: #d68400;
+  --color-yellow900: #955c00;
+
+  /* Secondary Color */
+  --color-gray50: #fafafa;
+  --color-gray100: #f5f5f5;
+  --color-gray200: #eeeeee;
+  --color-gray300: #e0e0e0;
+  --color-gray400: #bdbdbd;
+  --color-gray500: #9e9e9e;
+  --color-gray600: #757575;
+  --color-gray700: #616161;
+  --color-gray800: #424242;
+  --color-gray900: #121212;
+  --color-black: #000000;
+
+  /* System Color */
+  --color-dim: #00000066;
+  --color-dim2: #00000033;
+  --color-disablePink: #ffd4e4;
+  --color-error: #e22309;
+  --color-link: #2489ff;
+
+  /* Skin Type Color */
+  --color-skinBeige: #faf2e7;
+  --color-skinYellow: #fcbc17;
+  --color-skinOrange: #ff9447;
+  --color-skinPurple: #ad99fc;
+  --color-skinGreen: #9dd754;
+  --color-skinBlue: #3ecae9;
+
+  /* Social Color */
+  --color-kakao: #fee500;
+  --color-naver: #03c75a;
+  --color-facebook: #1977f3;
+
+  --color-transparent: #00000000;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
