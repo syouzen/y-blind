@@ -20,7 +20,7 @@ export default function Home() {
       </div>
 
       <Button color="red">
-        <Link href="/posts">입장하기</Link>
+        <Link href="/login">로그인</Link>
       </Button>
     </div>
   );
