@@ -1,4 +1,7 @@
 @import "tailwindcss";
+
+@plugin "tailwind-scrollbar-hide";
+@plugin "tailwindcss-animate";
 @plugin "flowbite-react/plugin/tailwindcss";
 @source "../../.flowbite-react/class-list.json";
 
@@ -115,6 +118,210 @@
   --color-facebook: #1977f3;
 
   --color-transparent: #00000000;
+}
+
+@layer utilities {
+  .font-caption10r {
+    font-size: 10px;
+    line-height: 14px;
+    font-weight: 400;
+  }
+  .font-caption10sb {
+    font-size: 10px;
+    line-height: 14px;
+    font-weight: 600;
+  }
+
+  .font-caption11r {
+    font-size: 11px;
+    line-height: 18px;
+    font-weight: 400;
+  }
+  .font-caption11m {
+    font-size: 11px;
+    line-height: 18px;
+    font-weight: 500;
+  }
+  .font-caption11sb {
+    font-size: 11px;
+    line-height: 18px;
+    font-weight: 600;
+  }
+
+  .font-caption12r {
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 400;
+  }
+  .font-caption12m {
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 500;
+  }
+  .font-caption12sb {
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 600;
+  }
+
+  .font-subbody13r {
+    font-size: 13px;
+    line-height: 16px;
+    font-weight: 400;
+  }
+  .font-body13r {
+    font-size: 13px;
+    line-height: 20px;
+    font-weight: 400;
+  }
+  .font-body13m {
+    font-size: 13px;
+    line-height: 20px;
+    font-weight: 500;
+  }
+  .font-body13sb {
+    font-size: 13px;
+    line-height: 20px;
+    font-weight: 600;
+  }
+
+  .font-body14r {
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 400;
+  }
+  .font-body14m {
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 500;
+  }
+  .font-body14sb {
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 600;
+  }
+
+  .font-body16r {
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 400;
+  }
+  .font-body16m {
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 500;
+  }
+  .font-body16sb {
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 600;
+  }
+
+  .font-heading18r {
+    font-size: 18px;
+    line-height: 26px;
+    font-weight: 400;
+  }
+  .font-heading18m {
+    font-size: 18px;
+    line-height: 26px;
+    font-weight: 500;
+  }
+  .font-heading18sb {
+    font-size: 18px;
+    line-height: 26px;
+    font-weight: 600;
+  }
+
+  .font-heading20r {
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 400;
+  }
+  .font-heading20sb {
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 600;
+  }
+
+  .font-heading22r {
+    font-size: 22px;
+    line-height: 32px;
+    font-weight: 400;
+  }
+  .font-heading22sb {
+    font-size: 22px;
+    line-height: 32px;
+    font-weight: 600;
+  }
+
+  .font-heading24sb {
+    font-size: 24px;
+    line-height: 36px;
+    font-weight: 600;
+  }
+
+  .font-heading30sb {
+    font-size: 30px;
+    line-height: 40px;
+    font-weight: 600;
+  }
+
+  .font-showcase20sb {
+    font-size: 20px;
+    line-height: 26px;
+    font-weight: 600;
+  }
+
+  .font-thumbnail14r {
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 400;
+  }
+  .font-thumbnail14sb {
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 600;
+  }
+  .font-thumbnail16r {
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 400;
+  }
+  .font-thumbnail16sb {
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 600;
+  }
+
+  .font-etc12r {
+    font-size: 12px;
+    line-height: 36px;
+    font-weight: 400;
+  }
+  .font-etc16r {
+    font-size: 16px;
+    line-height: 36px;
+    font-weight: 400;
+  }
+  .font-etc30r {
+    font-size: 30px;
+    line-height: 32px;
+    font-weight: 400;
+  }
+
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
