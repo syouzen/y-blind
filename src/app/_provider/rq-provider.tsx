@@ -7,7 +7,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import React, { Suspense, useEffect, useState, lazy } from "react";
+import React from "react";
 
 type RQProviderProps = {
   children: React.ReactNode;
@@ -51,22 +51,8 @@ function getQueryClient() {
   }
 }
 
-const ReactQueryDevtoolsProduction = lazy(() =>
-  import("@tanstack/react-query-devtools/build/modern/production.js").then(
-    (d) => ({
-      default: d.ReactQueryDevtools,
-    })
-  )
-);
-
 function RQProvider({ children }: RQProviderProps) {
-  const [showDevtools, setShowDevtools] = useState(false);
   const queryClient = getQueryClient();
-
-  useEffect(() => {
-    // @ts-ignore
-    window.toggleDevtools = () => setShowDevtools((old) => !old);
-  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -74,11 +60,6 @@ function RQProvider({ children }: RQProviderProps) {
       <ReactQueryDevtools
         initialIsOpen={process.env.NEXT_PUBLIC_MODE === "local"}
       />
-      {showDevtools && (
-        <Suspense fallback={null}>
-          <ReactQueryDevtoolsProduction />
-        </Suspense>
-      )}
     </QueryClientProvider>
   );
 }
