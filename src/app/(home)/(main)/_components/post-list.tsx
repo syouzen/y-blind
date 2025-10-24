@@ -1,3 +1,5 @@
+import Intersection from "@/components/intersection";
+
 import { PostItem } from "./post-item";
 
 interface Post {
@@ -26,7 +28,9 @@ export function PostList({ posts }: PostListProps) {
     <div className="flex flex-col">
       {/* NOTE : infinite scroll */}
       {posts.map((post) => (
-        <PostItem key={post.id} {...post} />
+        <Intersection key={post.id}>
+          <PostItem {...post} />
+        </Intersection>
       ))}
     </div>
   );

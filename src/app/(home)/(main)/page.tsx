@@ -11,10 +11,18 @@ const MOCK_POSTS = [
     commentCount: 8,
   },
   {
-    id: "4",
+    id: "2",
     userName: "익명의 개발자",
     createdAt: "10시간 전",
     content: "기획자 말을 못듣는 개발자인 것 같아요.",
+    likeCount: 89,
+    commentCount: 31,
+  },
+  {
+    id: "3",
+    userName: "익명의 디자이너",
+    createdAt: "10시간 전",
+    content: "디자이너 말을 못듣는 개발자가 많아요.",
     likeCount: 89,
     commentCount: 31,
   },
@@ -22,9 +30,9 @@ const MOCK_POSTS = [
 
 export default function Home() {
   return (
-    <div className="flex flex-col w-full min-h-[100dvh] bg-gray50">
+    <div className="flex flex-col w-full bg-gray50">
       {/* 헤더 */}
-      <div className="sticky top-0 z-10 bg-white border-b border-gray200 px-[20px] py-[16px]">
+      <div className="sticky top-[56px] z-10 bg-white border-b border-gray200 px-[20px] py-[16px]">
         <h1 className="font-heading20sb text-gray900">익명 게시판</h1>
       </div>
 
