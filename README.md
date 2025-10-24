@@ -23,7 +23,7 @@ Y-BLIND는 사용자들이 익명으로 자신의 진솔한 이야기를 나눌 
 ### 상태 관리 & UI
 
 - **TanStack React Query v5** - 서버 상태 관리
-- **Flowbite React** - UI 컴포넌트 라이브러리
+- **shadcn ui** - UI 컴포넌트 라이브러리
 - **React Toastify** - 사용자 알림 시스템
 
 ### 개발 도구
