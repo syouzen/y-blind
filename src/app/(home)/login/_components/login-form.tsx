@@ -5,12 +5,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-import Image from "@/components/image";
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -19,54 +17,83 @@ import {
 import { Input } from "@/components/ui/input";
 
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
+  id: z
+    .string()
+    .min(1, {
+      message: "아이디를 입력해주세요.",
+    })
+    .max(12, {
+      message: "아이디는 12자 이내로 입력해주세요.",
+    })
+    .regex(/^[a-z0-9_-]+$/, {
+      message: "아이디는 영문 소문자, 숫자, _, -만 사용할 수 있습니다.",
+    }),
+  password: z
+    .string()
+    .min(8, {
+      message: "비밀번호는 최소 8자 이상이어야 합니다.",
+    })
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/, {
+      message:
+        "비밀번호는 대문자, 소문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.",
+    }),
 });
 
 export default function LoginForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      id: "",
+      password: "",
     },
   });
 
   const onLogin = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    console.log(values.id, values.password);
   };
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
-      <Image
-        src="/images/logo.png"
-        alt="YBLIND"
-        width={0}
-        height={0}
-        style={{ width: "50%", height: "auto", objectFit: "cover" }}
-        className="py-[32px]"
-        sizes="100vw"
-      />
-      <div className="flex flex-col items-center justify-center gap-[8px] w-full">
+      <div className="flex flex-col items-center justify-center gap-[24px] w-full max-w-[400px]">
+        <h1 className="text-2xl font-bold">로그인</h1>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onLogin)} className="space-y-8">
+          <form
+            onSubmit={form.handleSubmit(onLogin)}
+            className="w-full space-y-[16px]"
+          >
             <FormField
               control={form.control}
-              name="username"
+              name="id"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>아이디</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="아이디를 입력하세요" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit">Submit</Button>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>비밀번호</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="비밀번호를 입력하세요"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" className="w-full">
+              로그인
+            </Button>
           </form>
         </Form>
       </div>
