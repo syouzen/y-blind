@@ -1,4 +1,3 @@
-import DefaultLoading from "@/app/_components/default-loading";
 import Intersection from "@/components/intersection";
 
 import { PostItem } from "./post-item";

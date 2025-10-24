@@ -7,7 +7,7 @@ import Image from "@/components/image";
 
 export function Navigation() {
   return (
-    <nav className="sticky top-0 z-[9999] bg-white flex w-full items-center justify-between px-[16px] py-[8px] h-[56px]">
+    <nav className="sticky top-0 z-49 bg-white flex w-full items-center justify-between px-[16px] py-[8px] h-[56px]">
       <Link href="/" className="inline-flex items-center">
         <Image
           src="/images/logo.png"
