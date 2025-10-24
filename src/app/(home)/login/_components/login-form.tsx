@@ -1,16 +1,39 @@
 "use client";
 
-import { Button, TextInput } from "flowbite-react";
+import { useForm } from "react-hook-form";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 import Image from "@/components/image";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+
+const formSchema = z.object({
+  username: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }),
+});
 
 export default function LoginForm() {
-  const onLogin = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
-    const id = formData.get("id") as string;
-    const password = formData.get("password") as string;
-    console.log(id, password);
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+    },
+  });
+
+  const onLogin = (values: z.infer<typeof formSchema>) => {
+    console.log(values);
   };
 
   return (
@@ -25,38 +48,27 @@ export default function LoginForm() {
         sizes="100vw"
       />
       <div className="flex flex-col items-center justify-center gap-[8px] w-full">
-        <form
-          className="flex w-full flex-col gap-[16px] px-[32px]"
-          onSubmit={onLogin}
-        >
-          <div className="flex flex-col gap-[8px]">
-            <span className="font-body16sb text-gray900">아이디</span>
-            <TextInput
-              id="id"
-              name="id"
-              type="text"
-              placeholder="아이디를 입력해주세요"
-              required
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onLogin)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="shadcn" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="flex flex-col gap-[8px]">
-            <span className="font-body16sb text-gray900">비밀번호</span>
-            <TextInput
-              id="password"
-              name="password"
-              type="password"
-              placeholder="비밀번호를 입력해주세요"
-              required
-            />
-          </div>
-          <Button
-            type="submit"
-            color="red"
-            className="font-body16sb text-white mt-[16px]"
-          >
-            로그인
-          </Button>
-        </form>
+            <Button type="submit">Submit</Button>
+          </form>
+        </Form>
       </div>
     </div>
   );
