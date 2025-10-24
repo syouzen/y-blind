@@ -1,9 +1,12 @@
-import type { Metadata, Viewport } from "next";
-import "./globals.css";
-import localFont from "next/font/local";
-import { cn } from "@/utils/tailwind";
-import RQProvider from "./_provider/rq-provider";
 import { ToastContainer } from "react-toastify";
+import type { Metadata, Viewport } from "next";
+import localFont from "next/font/local";
+
+import { cn } from "@/utils/tailwind";
+
+import RQProvider from "./_provider/rq-provider";
+
+import "./globals.css";
 
 const pretendard = localFont({
   src: "../../public/fonts/PretendardVariable.woff2",
@@ -47,8 +50,8 @@ export default function RootLayout({
       <body id="yb-body">
         <div
           className={cn(
-            "flex items-start justify-center transition-opacity opacity-100 bg-white",
-            "relative w-full max-w-[var(--mobile-width)] min-h-[100dvh] mx-auto scrollbar-hide"
+            "flex items-start justify-center transition-opacity opacity-100 bg-white shadow-[0px_4px_8px_0px_#00000014]",
+            "relative w-full max-w-[var(--desktop-width)] min-h-[100dvh] mx-auto scrollbar-hide"
           )}
         >
           <RQProvider>{children}</RQProvider>

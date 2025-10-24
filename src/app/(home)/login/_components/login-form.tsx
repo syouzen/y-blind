@@ -1,7 +1,8 @@
 "use client";
 
-import Image from "@/components/image";
 import { Button, TextInput } from "flowbite-react";
+
+import Image from "@/components/image";
 
 export default function LoginForm() {
   const onLogin = (e: React.FormEvent<HTMLFormElement>) => {

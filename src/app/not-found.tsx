@@ -1,6 +1,7 @@
-import { Button } from "flowbite-react";
 import { NextPage } from "next";
 import Link from "next/link";
+
+import { Button } from "flowbite-react";
 
 const NotFound: NextPage = () => {
   return (

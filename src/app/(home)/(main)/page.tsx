@@ -1,6 +1,4 @@
 import Image from "@/components/image";
-import { Button } from "flowbite-react";
-import Link from "next/link";
 
 export default function Home() {
   return (
@@ -18,10 +16,6 @@ export default function Home() {
           당신의 속마음을 털어놓는 곳
         </p>
       </div>
-
-      <Button color="red">
-        <Link href="/login">로그인</Link>
-      </Button>
     </div>
   );
 }
