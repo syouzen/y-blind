@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: contents.title,
     description: contents.description,
-    images: ["https://syouzenas.synology.me/y-blind/logo.jpg"],
+    images: ["https://syouzenas.synology.me/y-blind/logo.png"],
   },
   robots: {
     index: false,
