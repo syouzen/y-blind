@@ -1,36 +1,9 @@
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import ErrorResetBoundary from "@/lib/error-reset-boundary";
 
 import { PostList } from "./_components/post-list";
-
-// 예시 데이터
-const MOCK_POSTS = [
-  {
-    id: "1",
-    userName: "익명의 기획자",
-    createdAt: "2시간 전",
-    content: "개발자가 말을 드럽게 안들어요.",
-    likeCount: 24,
-    commentCount: 8,
-  },
-  {
-    id: "2",
-    userName: "익명의 개발자",
-    createdAt: "10시간 전",
-    content: "기획자 말을 못듣는 개발자인 것 같아요.",
-    likeCount: 89,
-    commentCount: 31,
-  },
-  {
-    id: "3",
-    userName: "익명의 디자이너",
-    createdAt: "10시간 전",
-    content: "디자이너 말을 못듣는 개발자가 많아요.",
-    likeCount: 89,
-    commentCount: 31,
-  },
-];
 
 export default function Home() {
   return (
@@ -44,7 +17,9 @@ export default function Home() {
       </div>
 
       {/* 게시글 리스트 */}
-      <PostList posts={MOCK_POSTS} />
+      <ErrorResetBoundary>
+        <PostList />
+      </ErrorResetBoundary>
     </div>
   );
 }

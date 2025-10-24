@@ -2,7 +2,7 @@ import { ToastContainer } from "react-toastify";
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 
-import { cn } from "@/utils/tailwind";
+import { cn } from "@/lib/utils";
 
 import RQProvider from "./_provider/rq-provider";
 
