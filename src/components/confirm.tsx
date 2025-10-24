@@ -8,7 +8,6 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-import useConfirm from "@/hooks/confirm";
 
 import { Button } from "./ui/button";
 
@@ -21,6 +20,7 @@ type ConfirmProps = {
   disableBackClick: boolean;
   danger: boolean;
   onConfirm: () => void;
+  onHide: () => void;
 };
 
 export default function Confirm({
@@ -32,12 +32,11 @@ export default function Confirm({
   disableBackClick = false,
   danger = false,
   onConfirm = () => {},
+  onHide,
 }: ConfirmProps) {
-  const { hide } = useConfirm();
-
   const handleConfirm = () => {
     onConfirm();
-    hide();
+    onHide();
   };
 
   return (
@@ -45,7 +44,7 @@ export default function Confirm({
       open={visible}
       onOpenChange={(open: boolean) => {
         if (!open && !disableBackClick) {
-          hide();
+          onHide();
         }
       }}
     >
@@ -65,7 +64,7 @@ export default function Confirm({
           </VisuallyHidden>
         )}
         <div className="mt-[16px] flex items-center justify-center gap-[4px] max-w-[calc(var(--mobile-width)-32px)]">
-          <Button variant={danger ? "ghost" : "default"} onClick={hide}>
+          <Button variant={danger ? "ghost" : "default"} onClick={onHide}>
             {cancelLabel}
           </Button>
           <Button

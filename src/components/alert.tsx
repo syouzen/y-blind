@@ -8,7 +8,6 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-import useAlert from "@/hooks/alert";
 
 import { Button } from "./ui/button";
 
@@ -19,6 +18,7 @@ type AlertProps = {
   label: string;
   disableBackClick?: boolean;
   onConfirm: () => void;
+  onHide: () => void;
 };
 
 export default function Alert({
@@ -28,12 +28,11 @@ export default function Alert({
   label = "확인",
   disableBackClick = false,
   onConfirm = () => {},
+  onHide,
 }: AlertProps) {
-  const { hide } = useAlert();
-
   const handleConfirm = () => {
     onConfirm();
-    hide();
+    onHide();
   };
 
   return (
@@ -41,7 +40,7 @@ export default function Alert({
       open={visible}
       onOpenChange={(open: boolean) => {
         if (!open && !disableBackClick) {
-          hide();
+          onHide();
         }
       }}
     >
