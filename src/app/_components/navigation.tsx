@@ -18,12 +18,20 @@ export function Navigation() {
           sizes="100vw"
         />
       </Link>
-      <Link
-        href="/login"
-        className="inline-flex h-[36px] items-center justify-center rounded-md px-[16px] py-[8px] text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
-      >
-        로그인
-      </Link>
+      <div className="flex items-center gap-[8px]">
+        <Link
+          href="/mini-game"
+          className="inline-flex h-[36px] items-center justify-center rounded-md px-[16px] py-[8px] text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+        >
+          미니게임
+        </Link>
+        <Link
+          href="/login"
+          className="inline-flex h-[36px] items-center justify-center rounded-md px-[16px] py-[8px] text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+        >
+          로그인
+        </Link>
+      </div>
     </nav>
   );
 }
