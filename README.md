@@ -24,7 +24,8 @@ Y-BLIND는 사용자들이 익명으로 자신의 진솔한 이야기를 나눌 
 
 - **TanStack React Query v5** - 서버 상태 관리
 - **shadcn ui** - UI 컴포넌트 라이브러리
-- **React Toastify** - 사용자 알림 시스템
+- **React Toastify** - 토스트 알림
+- **Event System** - Alert/Confirm 다이얼로그 관리
 
 ### 개발 도구
 
@@ -118,11 +119,27 @@ src/
 │   ├── (home)/         # 홈 그룹 라우트
 │   │   ├── (main)/     # 메인 페이지
 │   │   ├── login/      # 로그인 페이지
-│   │   └── posts/      # 포스트 페이지
+│   │   └── write/      # 글 작성 페이지
+│   ├── _components/    # 앱 전역 컴포넌트
 │   ├── _provider/      # 전역 Provider
 │   └── globals.css     # 전역 스타일
 ├── components/         # 재사용 컴포넌트
-└── utils/             # 유틸리티 함수
+│   ├── ui/            # shadcn UI 컴포넌트
+│   ├── alert.tsx      # Alert 다이얼로그
+│   └── confirm.tsx    # Confirm 다이얼로그
+├── contexts/          # React Context
+│   └── event.tsx      # Event Provider (Alert/Confirm)
+├── hooks/             # Custom Hooks
+│   └── event.tsx      # useEvent Hook
+├── lib/               # 라이브러리 & 유틸리티
+│   ├── api.ts         # Axios 인스턴스 & 인터셉터
+│   └── utils.ts       # 유틸리티 함수
+├── query/             # API 요청 함수
+│   ├── auth-api.tsx   # 인증 API
+│   └── post-api.tsx   # 포스트 API
+└── types/             # TypeScript 타입 정의
+    ├── api-payload.ts # API 요청 타입
+    └── api-response.ts # API 응답 타입
 ```
 
 ### 코드 스타일
@@ -138,6 +155,164 @@ Husky와 lint-staged를 통해 커밋 전 자동으로 다음을 수행합니다
 
 - ESLint 검사
 - Prettier 포맷팅
+
+## 💡 이벤트 시스템 (useEvent)
+
+Y-BLIND는 통합된 이벤트 시스템으로 Alert와 Confirm 다이얼로그를 관리합니다.
+
+### 사용 방법
+
+```typescript
+import useEvent from "@/hooks/event";
+
+function MyComponent() {
+  const { showAlert, hideAlert, showConfirm, hideConfirm } = useEvent();
+
+  // Alert 다이얼로그 표시
+  const handleSuccess = () => {
+    showAlert({
+      title: "성공",
+      content: "작업이 완료되었습니다.",
+      label: "확인",
+      onConfirm: () => {
+        console.log("확인 버튼 클릭");
+      },
+    });
+  };
+
+  // Confirm 다이얼로그 표시
+  const handleDelete = () => {
+    showConfirm({
+      title: "삭제 확인",
+      content: "정말로 삭제하시겠습니까?",
+      confirmLabel: "삭제",
+      cancelLabel: "취소",
+      danger: true,
+      onConfirm: () => {
+        // 삭제 로직
+      },
+    });
+  };
+
+  return (
+    <div>
+      <button onClick={handleSuccess}>성공 알림</button>
+      <button onClick={handleDelete}>삭제</button>
+    </div>
+  );
+}
+```
+
+### Alert 옵션
+
+- `title`: 다이얼로그 제목
+- `content`: 다이얼로그 내용
+- `label`: 확인 버튼 텍스트 (기본값: "확인")
+- `disableBackClick`: 배경 클릭으로 닫기 비활성화 (기본값: false)
+- `onConfirm`: 확인 버튼 클릭 시 실행될 콜백
+
+### Confirm 옵션
+
+- `title`: 다이얼로그 제목
+- `content`: 다이얼로그 내용
+- `confirmLabel`: 확인 버튼 텍스트 (기본값: "네")
+- `cancelLabel`: 취소 버튼 텍스트 (기본값: "아니오")
+- `danger`: 위험한 동작 표시 (삭제 등, 기본값: false)
+- `disableBackClick`: 배경 클릭으로 닫기 비활성화 (기본값: false)
+- `onConfirm`: 확인 버튼 클릭 시 실행될 콜백
+
+## 🌐 API 통신
+
+Y-BLIND는 Axios 기반의 체계적인 API 통신 구조를 제공합니다.
+
+### API 클라이언트 구조
+
+모든 API 요청은 ES2015 모듈 구문으로 작성되어 있으며, TypeScript로 타입 안정성을 보장합니다.
+
+### 인증 API
+
+```typescript
+import { AuthApi } from "@/query/auth-api";
+
+// 회원가입
+const result = await AuthApi.join({
+  userId: "user123",
+  password: "password123",
+  nickname: "닉네임",
+});
+
+// 로그인
+const result = await AuthApi.login({
+  userId: "user123",
+  password: "password123",
+});
+```
+
+### 포스트 API
+
+```typescript
+import { PostApi } from "@/query/post-api";
+
+// 포스트 작성
+const result = await PostApi.createPost({
+  title: "포스트 제목",
+  content: "포스트 내용",
+});
+
+// 포스트 목록 조회
+const result = await PostApi.getPostList({
+  page: 1,
+  limit: 20,
+});
+```
+
+### TanStack Query 활용
+
+```typescript
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { AuthApi } from "@/query/auth-api";
+import { PostApi } from "@/query/post-api";
+
+function MyComponent() {
+  // 포스트 목록 조회
+  const { data, isLoading } = useQuery({
+    queryKey: ["posts", page],
+    queryFn: () => PostApi.getPostList({ page, limit: 20 }),
+  });
+
+  // 로그인 Mutation
+  const loginMutation = useMutation({
+    mutationFn: AuthApi.login,
+    onSuccess: (data) => {
+      console.log("로그인 성공", data);
+    },
+  });
+
+  return <div>...</div>;
+}
+```
+
+### API 타입 정의
+
+모든 API는 TypeScript 인터페이스로 정의되어 있습니다:
+
+- **Payload 타입**: `src/types/api-payload.ts`
+- **Response 타입**: `src/types/api-response.ts`
+
+```typescript
+// 요청 타입 예시
+interface IUserLoginPayload {
+  userId: string;
+  password: string;
+}
+
+// 응답 타입 예시
+interface IResultResponse {
+  success: boolean;
+  message: string;
+  data?: any;
+}
+```
 
 ---
 

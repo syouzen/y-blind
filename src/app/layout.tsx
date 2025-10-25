@@ -2,7 +2,8 @@ import { ToastContainer } from "react-toastify";
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 
-import { cn } from "@/utils/tailwind";
+import { EventProvider } from "@/contexts/event";
+import { cn } from "@/lib/utils";
 
 import RQProvider from "./_provider/rq-provider";
 
@@ -48,23 +49,25 @@ export default function RootLayout({
   return (
     <html lang="ko" className={`${pretendard.variable}`}>
       <body id="yb-body">
-        <div
-          className={cn(
-            "flex items-start justify-center transition-opacity opacity-100 bg-white shadow-[0px_4px_8px_0px_#00000014]",
-            "relative w-full max-w-[var(--desktop-width)] min-h-[100dvh] mx-auto scrollbar-hide"
-          )}
-        >
-          <RQProvider>{children}</RQProvider>
-          <ToastContainer
-            closeButton={false}
-            pauseOnHover={false}
-            pauseOnFocusLoss={false}
-            position="top-center"
-            autoClose={2500}
-            limit={1}
-            hideProgressBar
-          />
-        </div>
+        <EventProvider>
+          <div
+            className={cn(
+              "flex items-start justify-center transition-opacity opacity-100 bg-white shadow-[0px_4px_8px_0px_#00000014]",
+              "relative w-full max-w-[var(--desktop-width)] min-h-[100dvh] mx-auto scrollbar-hide"
+            )}
+          >
+            <RQProvider>{children}</RQProvider>
+            <ToastContainer
+              closeButton={false}
+              pauseOnHover={false}
+              pauseOnFocusLoss={false}
+              position="top-center"
+              autoClose={2500}
+              limit={1}
+              hideProgressBar
+            />
+          </div>
+        </EventProvider>
       </body>
     </html>
   );

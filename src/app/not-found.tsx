@@ -14,7 +14,7 @@ const NotFound: NextPage = () => {
           이 페이지는 존재하지 않습니다
         </p>
         <div className="flex flex-row gap-[8px] mt-[16px]">
-          <BackButton />
+          <BackButton>뒤로가기</BackButton>
           <Button>
             <Link href="/">홈으로 돌아가기</Link>
           </Button>

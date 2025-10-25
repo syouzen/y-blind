@@ -4,7 +4,11 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 
-const BackButton = () => {
+interface BackButtonProps {
+  children: React.ReactNode;
+}
+
+const BackButton = ({ children }: BackButtonProps) => {
   const router = useRouter();
   const handleBack = () => {
     router.back();
@@ -12,7 +16,7 @@ const BackButton = () => {
 
   return (
     <Button variant="outline" onClick={handleBack}>
-      뒤로가기
+      {children}
     </Button>
   );
 };
