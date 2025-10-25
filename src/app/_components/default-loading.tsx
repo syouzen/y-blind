@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 
