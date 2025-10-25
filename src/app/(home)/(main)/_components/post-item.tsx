@@ -4,6 +4,8 @@ import { useState } from "react";
 
 import { Heart, MessageCircle } from "lucide-react";
 
+import { CommentDialog } from "./comment-dialog";
+
 interface PostItemProps {
   id: string;
   userName: string;
@@ -14,6 +16,7 @@ interface PostItemProps {
 }
 
 export function PostItem({
+  id,
   userName,
   createdAt,
   content,
@@ -22,6 +25,7 @@ export function PostItem({
 }: PostItemProps) {
   const [likeCount, setLikeCount] = useState(initialLikeCount);
   const [isLiked, setIsLiked] = useState(false);
+  const [isCommentDialogOpen, setIsCommentDialogOpen] = useState(false);
 
   const handleLike = () => {
     if (isLiked) {
@@ -63,11 +67,21 @@ export function PostItem({
         </button>
 
         {/* NOTE 댓글 버튼 : 클릭 시 댓글 시트 노출 */}
-        <button className="flex items-center gap-[4px] px-[12px] py-[6px] rounded-[8px] bg-gray50 hover:bg-gray100 transition-colors">
+        <button
+          onClick={() => setIsCommentDialogOpen(true)}
+          className="flex items-center gap-[4px] px-[12px] py-[6px] rounded-[8px] bg-gray50 hover:bg-gray100 transition-colors"
+        >
           <MessageCircle className="size-4" />
           <span className="font-body12m text-gray700">{commentCount}</span>
         </button>
       </div>
+
+      {/* 댓글 Dialog */}
+      <CommentDialog
+        open={isCommentDialogOpen}
+        onOpenChange={setIsCommentDialogOpen}
+        postId={id}
+      />
     </div>
   );
 }
