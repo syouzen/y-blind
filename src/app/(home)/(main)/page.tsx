@@ -1,27 +1,25 @@
-import Image from "@/components/image";
-import { Button } from "flowbite-react";
 import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import ErrorResetBoundary from "@/lib/error-reset-boundary";
+
+import { PostList } from "./_components/post-list";
 
 export default function Home() {
   return (
-    <div className="flex flex-col gap-[16px] items-center justify-center h-[100dvh] w-full">
-      <div className="flex flex-col items-center justify-center">
-        <Image
-          src="/images/logo.png"
-          alt="YBLIND"
-          width={0}
-          height={0}
-          style={{ width: "50%", height: "auto", objectFit: "cover" }}
-          sizes="100vw"
-        />
-        <p className="font-heading18sb text-gray900">
-          당신의 속마음을 털어놓는 곳
-        </p>
+    <div className="flex flex-col w-full bg-gray50">
+      {/* 헤더 */}
+      <div className="sticky top-[56px] z-10 bg-white border-b border-gray200 px-[20px] py-[16px] flex items-center justify-between">
+        <h1 className="font-heading20sb text-gray900">익명 게시판</h1>
+        <Button variant="default" asChild>
+          <Link href="/write">작성</Link>
+        </Button>
       </div>
 
-      <Button color="red">
-        <Link href="/login">로그인</Link>
-      </Button>
+      {/* 게시글 리스트 */}
+      {/* <ErrorResetBoundary> */}
+      <PostList />
+      {/* </ErrorResetBoundary> */}
     </div>
   );
 }

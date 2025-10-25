@@ -1,13 +1,15 @@
 "use client";
 
-import { toast } from "@/components/toast";
+import React from "react";
+
 import {
   isServer,
-  QueryClientProvider,
   QueryClient,
+  QueryClientProvider,
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import React from "react";
+
+import { toast } from "@/components/toast";
 
 type RQProviderProps = {
   children: React.ReactNode;
