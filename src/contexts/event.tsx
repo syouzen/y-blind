@@ -8,6 +8,7 @@ import React, {
   useState,
 } from "react";
 
+import DefaultLoading from "@/app/_components/default-loading";
 import Alert from "@/components/alert";
 import Confirm from "@/components/confirm";
 
@@ -36,6 +37,8 @@ interface EventContextType {
   hideAlert: () => void;
   showConfirm: (options: Partial<ConfirmState>) => void;
   hideConfirm: () => void;
+  showLoading: () => void;
+  hideLoading: () => void;
 }
 
 const defaultAlertValue: AlertState = {
@@ -63,6 +66,8 @@ export const EventContext = createContext<EventContextType>({
   hideAlert: () => {},
   showConfirm: () => {},
   hideConfirm: () => {},
+  showLoading: () => {},
+  hideLoading: () => {},
 });
 
 interface EventProviderProps {
@@ -72,6 +77,7 @@ interface EventProviderProps {
 export function EventProvider({ children }: EventProviderProps) {
   const [alert, setAlert] = useState<AlertState>(defaultAlertValue);
   const [confirm, setConfirm] = useState<ConfirmState>(defaultConfirmValue);
+  const [loading, setLoading] = useState(false);
 
   const showAlert = useCallback((options: Partial<AlertState>) => {
     setAlert((prev) => ({ ...prev, ...options, visible: true }));
@@ -89,8 +95,23 @@ export function EventProvider({ children }: EventProviderProps) {
     setConfirm((prev) => ({ ...prev, visible: false }));
   }, []);
 
+  const showLoading = useCallback(() => {
+    setLoading(true);
+  }, []);
+
+  const hideLoading = useCallback(() => {
+    setLoading(false);
+  }, []);
+
   const eventProviderValue = useMemo(
-    () => ({ showAlert, hideAlert, showConfirm, hideConfirm }),
+    () => ({
+      showAlert,
+      hideAlert,
+      showConfirm,
+      hideConfirm,
+      showLoading,
+      hideLoading,
+    }),
     [showAlert, hideAlert, showConfirm, hideConfirm]
   );
 
@@ -99,6 +120,7 @@ export function EventProvider({ children }: EventProviderProps) {
       {children}
       <Alert {...alert} onHide={hideAlert} />
       <Confirm {...confirm} onHide={hideConfirm} />
+      {loading && <DefaultLoading />}
     </EventContext.Provider>
   );
 }
