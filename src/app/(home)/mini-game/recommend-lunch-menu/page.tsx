@@ -1,5 +1,13 @@
+"use client";
+
+import dynamic from "next/dynamic";
+
 import { MenuItemManager } from "./_components/menu-item-manager";
-import { Roulette } from "./_components/roulette";
+
+const Roulette = dynamic(
+  () => import("./_components/roulette").then((mod) => mod.Roulette),
+  { ssr: false }
+);
 
 export default function RecommendLunchMenu() {
   return (
