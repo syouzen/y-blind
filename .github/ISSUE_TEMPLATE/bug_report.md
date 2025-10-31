@@ -1,10 +1,9 @@
 ---
 name: Bug report
 about: 버그 리포트 이슈 템플릿
-title: "\U0001F41B : issue"
+title: "\U0001F41B : "
 labels: bug
-assignees: ''
-
+assignees: ""
 ---
 
 ## 어떤 버그인가요?
@@ -20,3 +19,5 @@ assignees: ''
 > 예상했던 정상적인 결과가 어떤 것이었는지 설명해주세요
 
 ## 참고할만한 자료(선택)
+
+> 참고할만한 자료를 선택해서 첨부해주세요.

@@ -1,10 +1,9 @@
 ---
 name: Feature request
 about: 기능 추가 이슈 템플릿
-title: "✨ : issue"
+title: "✨ : "
 labels: feature
-assignees: ''
-
+assignees: ""
 ---
 
 ## 어떤 기능인가요?
@@ -18,3 +17,5 @@ assignees: ''
 - [ ] TODO
 
 ## 참고할만한 자료(선택)
+
+> 참고할만한 자료를 선택해서 첨부해주세요.
