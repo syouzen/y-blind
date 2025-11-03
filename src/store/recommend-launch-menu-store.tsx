@@ -8,18 +8,10 @@ interface RecommendLaunchMenuStoreState {
   removeMenuItem: (index: number) => void;
 }
 
-const DEFAULT_MENU_ITEMS = [
-  "제육볶음",
-  "김치찌개",
-  "떡볶이",
-  "만두국",
-  "칼국수",
-];
-
 const useRecommendLaunchMenuStore = create<RecommendLaunchMenuStoreState>()(
   persist(
     (set, get) => ({
-      menuItems: DEFAULT_MENU_ITEMS,
+      menuItems: [],
       setMenuItems: (menuItems) => set({ menuItems }),
       addMenuItem: (item) => {
         const currentItems = get().menuItems;
