@@ -1,0 +1,13 @@
+addReviewers: true
+addAssignees: author
+
+reviewers:
+  - syouzen
+  - yoojeho
+  - MTGVim
+  - 0jiiino
+
+numberOfReviewers: 1
+
+skipKeywords:
+  - wip
