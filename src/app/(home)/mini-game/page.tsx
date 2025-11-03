@@ -1,7 +1,3 @@
-import Link from "next/link";
-
-import { Button } from "@/components/ui/button";
-
 import GameItem from "./_components/game-item";
 
 interface MiniGameItem {
@@ -14,7 +10,7 @@ interface MiniGameItem {
 const MINI_GAMES: MiniGameItem[] = [
   {
     id: "lunch-menu",
-    title: "점매추 🍚🤔",
+    title: "점메추 🍚🤔",
     description: "오늘 점심 메뉴를 추천해드립니다",
     path: "/mini-game/recommend-lunch-menu",
   },
