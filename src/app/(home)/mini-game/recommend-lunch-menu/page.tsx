@@ -14,7 +14,7 @@ export default function RecommendLunchMenu() {
     <div className="flex flex-col w-full min-h-screen bg-gray50">
       {/* 헤더 */}
       <div className="sticky top-[56px] z-10 bg-white border-b border-gray200 px-[20px] py-[16px] flex items-center justify-between h-[69px]">
-        <h1 className="font-heading20sb text-gray900">점매추 🍚🤔</h1>
+        <h1 className="font-heading20sb text-gray900">점메추 🍚🤔</h1>
       </div>
 
       {/* 컨텐츠 */}
