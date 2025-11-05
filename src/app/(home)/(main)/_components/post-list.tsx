@@ -19,7 +19,12 @@ export function PostList() {
       queryKey: ["posts"],
       queryFn: ({ pageParam = 1 }) =>
         PostApi.getPostList({ page: pageParam, limit: 10 }),
-      getNextPageParam: (lastPage) => lastPage.page + 1,
+      getNextPageParam: (lastPage) => {
+        if (lastPage.page < lastPage.totalPages) {
+          return lastPage.page + 1;
+        }
+        return null;
+      },
       initialPageParam: 1,
     });
 
@@ -39,7 +44,7 @@ export function PostList() {
       components={{
         EmptyPlaceholder: () => (
           <div className="flex flex-col items-center justify-center text-center gap-[16px] h-[calc(100dvh-54px)] text-gray-400">
-            운동친구 찾기 글이 없어요
+            게시글이 없어요! 첫 게시글을 작성해보세요.
           </div>
         ),
       }}

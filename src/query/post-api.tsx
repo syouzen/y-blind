@@ -27,7 +27,10 @@ async function getCommentList(payload: ICommentListPayload) {
   const { data: result } = await api.get<ICommentListResponse>(
     `/post/${payload.postId}/comments`,
     {
-      params: payload,
+      params: {
+        page: payload.page,
+        limit: payload.limit,
+      },
     }
   );
   return result;

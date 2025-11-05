@@ -1,10 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import { Virtuoso } from "react-virtuoso";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { SendHorizontal } from "lucide-react";
 
+import Intersection from "@/components/intersection";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,8 +20,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Spinner } from "@/components/ui/spinner";
+import useVirtuosoSnapshot from "@/hooks/snapshot";
 import { PostApi } from "@/query/post-api";
 import { IComment } from "@/types/api-response";
+
+import CommentItem from "./comment-item";
 
 interface CommentDialogProps {
   open: boolean;
@@ -30,16 +40,29 @@ export function CommentDialog({
   const [comment, setComment] = useState("");
   const queryClient = useQueryClient();
 
-  const { data: commentData, isLoading } = useQuery({
-    queryKey: ["comments", postId],
-    queryFn: () =>
-      PostApi.getCommentList({
-        postId,
-        offset: 0,
-        limit: 100,
-      }),
-    enabled: open,
-  });
+  const { virtuosoRef, snapshot } = useVirtuosoSnapshot(
+    "comment-dialog-snapshot"
+  );
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    useInfiniteQuery({
+      queryKey: ["comments", postId],
+      queryFn: ({ pageParam = 1 }) =>
+        PostApi.getCommentList({
+          postId,
+          page: pageParam,
+          limit: 100,
+        }),
+      getNextPageParam: (lastPage) => {
+        if (lastPage.page < lastPage.totalPages) {
+          return lastPage.page + 1;
+        }
+        return null;
+      },
+      initialPageParam: 1,
+    });
+
+  const comments = data ? data.pages.flatMap((page) => page.data) : [];
 
   const createCommentMutation = useMutation({
     mutationFn: PostApi.createComment,
@@ -60,8 +83,6 @@ export function CommentDialog({
     });
   };
 
-  const comments = commentData?.data ?? [];
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[600px] max-h-[80vh] flex flex-col p-0">
@@ -72,40 +93,36 @@ export function CommentDialog({
         </DialogHeader>
 
         {/* 댓글 목록 */}
-        <div className="flex-1 overflow-y-auto p-[24px] pt-[16px]">
-          {isLoading ? (
-            <div className="flex items-center justify-center py-[40px]">
-              <Spinner className="size-8 text-gray700" />
-            </div>
-          ) : comments.length === 0 ? (
-            <div className="flex items-center justify-center py-[40px]">
-              <span className="font-body14r text-gray-500">
-                첫 댓글을 작성해보세요!
-              </span>
-            </div>
-          ) : (
-            <div className="flex flex-col gap-[16px]">
-              {comments.map((comment: IComment) => (
-                <div
-                  key={comment.id}
-                  className="flex flex-col gap-[8px] p-[16px] rounded-[8px] bg-gray-50"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-heading14sb text-gray-900">
-                      {comment.userName}
-                    </span>
-                    <span className="font-body12r text-gray-500">
-                      {comment.createdAt}
-                    </span>
-                  </div>
-                  <p className="font-body14r text-gray-800 whitespace-pre-wrap">
-                    {comment.content}
-                  </p>
+        {isLoading ? (
+          <div className="flex items-center justify-center py-[40px]">
+            <Spinner className="size-8 text-gray700" />
+          </div>
+        ) : (
+          <Virtuoso
+            ref={virtuosoRef}
+            restoreStateFrom={snapshot}
+            useWindowScroll
+            data={comments}
+            itemContent={(__: number, comment: IComment) => (
+              <Intersection>
+                <CommentItem data={comment} />
+              </Intersection>
+            )}
+            components={{
+              EmptyPlaceholder: () => (
+                <div className="flex flex-col items-center justify-center text-center gap-[16px] h-[calc(100dvh-54px)] text-gray-400">
+                  댓글이 없어요! 첫 댓글을 작성해보세요.
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
+              ),
+            }}
+            endReached={() => {
+              if (hasNextPage && !isFetchingNextPage) {
+                fetchNextPage();
+              }
+            }}
+            className="h-[500px]"
+          />
+        )}
 
         {/* 댓글 입력 */}
         <form

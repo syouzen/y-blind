@@ -27,6 +27,9 @@ export interface IComment {
 }
 
 export interface ICommentListResponse {
-  result: boolean;
   data: IComment[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }

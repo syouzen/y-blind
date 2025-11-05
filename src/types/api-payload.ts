@@ -19,7 +19,7 @@ export interface ICreatePostPayload {
 
 export interface ICommentListPayload {
   postId: string;
-  offset: number;
+  page: number;
   limit: number;
 }
 

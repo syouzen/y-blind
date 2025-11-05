@@ -81,7 +81,7 @@ export function PostItem({ data }: PostItemProps) {
               <Heart className="size-4" />
             )}
           </span>
-          <span className="font-body12m text-gray700">{likeCount}</span>
+          <span className="font-body12m text-gray700">{likeCount ?? 0}</span>
         </button>
 
         {/* NOTE 댓글 버튼 : 클릭 시 댓글 시트 노출 */}
@@ -90,7 +90,9 @@ export function PostItem({ data }: PostItemProps) {
           className="flex items-center gap-[4px] px-[12px] py-[6px] rounded-[8px] bg-gray50 hover:bg-gray100 transition-colors"
         >
           <MessageCircle className="size-4" />
-          <span className="font-body12m text-gray700">{data.commentCount}</span>
+          <span className="font-body12m text-gray700">
+            {data.commentCount ?? 0}
+          </span>
         </button>
       </div>
 
