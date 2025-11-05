@@ -1,39 +1,53 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "react-toastify";
 
+import { useMutation } from "@tanstack/react-query";
 import { Heart, MessageCircle } from "lucide-react";
+
+import { calculateFromNow } from "@/lib/dayjs";
+import { PostApi } from "@/query/post-api";
+import { IPost } from "@/types/api-response";
 
 import { CommentDialog } from "./comment-dialog";
 
 interface PostItemProps {
-  id: string;
-  userName: string;
-  createdAt: string;
-  content: string;
-  likeCount: number;
-  commentCount: number;
+  data: IPost;
 }
 
-export function PostItem({
-  id,
-  userName,
-  createdAt,
-  content,
-  likeCount: initialLikeCount,
-  commentCount,
-}: PostItemProps) {
-  const [likeCount, setLikeCount] = useState(initialLikeCount);
+export function PostItem({ data }: PostItemProps) {
+  const [likeCount, setLikeCount] = useState(data.likeCount);
   const [isLiked, setIsLiked] = useState(false);
   const [isCommentDialogOpen, setIsCommentDialogOpen] = useState(false);
 
-  const handleLike = () => {
-    if (isLiked) {
-      setLikeCount((prev) => prev - 1);
-      setIsLiked(false);
-    } else {
+  const { mutate: likePost } = useMutation({
+    mutationFn: () => PostApi.likePost(data.id),
+    onSuccess: () => {
       setLikeCount((prev) => prev + 1);
       setIsLiked(true);
+    },
+    onError: () => {
+      toast.error("문제가 발생했어요");
+    },
+  });
+
+  const { mutate: unlikePost } = useMutation({
+    mutationFn: () => PostApi.unlikePost(data.id),
+    onSuccess: () => {
+      setLikeCount((prev) => prev - 1);
+      setIsLiked(false);
+    },
+    onError: () => {
+      toast.error("문제가 발생했어요");
+    },
+  });
+
+  const handleLike = () => {
+    if (isLiked) {
+      unlikePost();
+    } else {
+      likePost();
     }
   };
 
@@ -41,12 +55,16 @@ export function PostItem({
     <div className="flex flex-col gap-[12px] p-[16px] bg-white border-b border-gray200">
       {/* 사용자 정보 */}
       <div className="flex items-center justify-between">
-        <span className="font-heading14sb text-gray900">{userName}</span>
-        <span className="font-body12r text-gray500">{createdAt}</span>
+        <span className="font-heading14sb text-gray900">{data.userName}</span>
+        <span className="font-body12r text-gray500">
+          {calculateFromNow(data.createdAt)}
+        </span>
       </div>
 
       {/* 글 내용 */}
-      <p className="font-body14r text-gray800 whitespace-pre-wrap">{content}</p>
+      <p className="font-body14r text-gray800 whitespace-pre-wrap">
+        {data.content}
+      </p>
 
       {/* 액션 버튼들 */}
       <div className="flex items-center gap-[16px]">
@@ -72,7 +90,7 @@ export function PostItem({
           className="flex items-center gap-[4px] px-[12px] py-[6px] rounded-[8px] bg-gray50 hover:bg-gray100 transition-colors"
         >
           <MessageCircle className="size-4" />
-          <span className="font-body12m text-gray700">{commentCount}</span>
+          <span className="font-body12m text-gray700">{data.commentCount}</span>
         </button>
       </div>
 
@@ -80,7 +98,7 @@ export function PostItem({
       <CommentDialog
         open={isCommentDialogOpen}
         onOpenChange={setIsCommentDialogOpen}
-        postId={id}
+        postId={data.id}
       />
     </div>
   );

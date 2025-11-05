@@ -41,9 +41,25 @@ async function createComment(payload: ICreateCommentPayload) {
   return result;
 }
 
+async function likePost(postId: string) {
+  const { data: result } = await api.post<IResultResponse>(
+    `/post/${postId}/like`
+  );
+  return result;
+}
+
+async function unlikePost(postId: string) {
+  const { data: result } = await api.delete<IResultResponse>(
+    `/post/${postId}/like`
+  );
+  return result;
+}
+
 export const PostApi = {
   createPost,
   getPostList,
   getCommentList,
   createComment,
+  likePost,
+  unlikePost,
 };

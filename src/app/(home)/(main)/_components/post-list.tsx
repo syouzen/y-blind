@@ -26,38 +26,29 @@ export function PostList() {
   const posts = data ? data.pages.flatMap((page) => page.data) : [];
 
   return (
-    <div className="flex flex-col">
-      {/* NOTE : infinite scroll */}
-      {posts.map((post) => (
-        <Intersection key={post.id}>
-          <PostItem {...post} />
+    <Virtuoso
+      ref={virtuosoRef}
+      restoreStateFrom={snapshot}
+      useWindowScroll
+      data={posts}
+      itemContent={(__: number, post: IPost) => (
+        <Intersection>
+          <PostItem data={post} />
         </Intersection>
-      ))}
-
-      <Virtuoso
-        ref={virtuosoRef}
-        restoreStateFrom={snapshot}
-        useWindowScroll
-        data={posts}
-        itemContent={(__: number, post: IPost) => (
-          <Intersection className="px-[16px]">
-            <PostItem {...post} />
-          </Intersection>
-        )}
-        components={{
-          EmptyPlaceholder: () => (
-            <div className="flex flex-col items-center justify-center text-center gap-[16px] h-[calc(100dvh-54px)] text-gray-400">
-              운동친구 찾기 글이 없어요
-            </div>
-          ),
-        }}
-        endReached={() => {
-          if (hasNextPage && !isFetchingNextPage) {
-            fetchNextPage();
-          }
-        }}
-        className="h-full my-[16px]"
-      />
-    </div>
+      )}
+      components={{
+        EmptyPlaceholder: () => (
+          <div className="flex flex-col items-center justify-center text-center gap-[16px] h-[calc(100dvh-54px)] text-gray-400">
+            운동친구 찾기 글이 없어요
+          </div>
+        ),
+      }}
+      endReached={() => {
+        if (hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      }}
+      className="h-full"
+    />
   );
 }
