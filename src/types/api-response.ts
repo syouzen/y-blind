@@ -12,8 +12,11 @@ export interface IPost {
 }
 
 export interface IPostListResponse {
-  result: boolean;
   data: IPost[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }
 
 export interface IComment {

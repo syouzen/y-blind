@@ -8,7 +8,10 @@ import { getCookie } from "cookies-next";
 
 class AxiosInstance {
   private instance = axios.create({
-    baseURL: `${process.env.NEXT_PUBLIC_BASE_URL}`,
+    baseURL:
+      process.env.NODE_ENV === "development"
+        ? "/api-proxy"
+        : process.env.NEXT_PUBLIC_BASE_URL,
   });
 
   constructor() {

@@ -35,7 +35,7 @@ const ErrorResetBoundary = ({
     <ErrorBoundary
       onReset={reset}
       fallbackRender={({ resetErrorBoundary }) => (
-        <div className="flex w-full h-[calc(100vh-60px)] flex-col items-center justify-center gap-[32px]">
+        <div className="flex w-full flex-col items-center justify-center gap-[32px] pt-[100px]">
           {errorFallback}
           <div className="flex gap-[8px]">
             <Button variant="secondary" onClick={() => router.back()}>

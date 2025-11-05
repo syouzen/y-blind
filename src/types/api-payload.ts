@@ -9,7 +9,7 @@ export interface IUserLoginPayload {
 }
 
 export interface IPostListPayload {
-  offset: number;
+  page: number;
   limit: number;
 }
 
