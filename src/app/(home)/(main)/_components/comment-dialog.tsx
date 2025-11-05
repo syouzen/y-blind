@@ -101,7 +101,6 @@ export function CommentDialog({
           <Virtuoso
             ref={virtuosoRef}
             restoreStateFrom={snapshot}
-            useWindowScroll
             data={comments}
             itemContent={(__: number, comment: IComment) => (
               <Intersection>
@@ -120,7 +119,7 @@ export function CommentDialog({
                 fetchNextPage();
               }
             }}
-            className="h-[500px]"
+            className="h-[450px]"
           />
         )}
 

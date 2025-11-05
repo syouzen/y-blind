@@ -20,9 +20,9 @@ dayjs.extend(updateLocale);
 
 dayjs.updateLocale("ko", {
   relativeTime: {
-    future: "%s후",
-    past: "%s전",
-    s: "1분",
+    future: "%s",
+    past: "%s",
+    s: "방금",
     m: "1분",
     mm: "%d분",
     h: "1시간",
@@ -45,7 +45,7 @@ export const calculateFromNow = (time: string) => {
   if (time) {
     const notiTime = dayjs(time);
     if (dayjs().diff(notiTime, "day") < 1) {
-      return notiTime.fromNow().replace("전", "").replace("후", "");
+      return notiTime.fromNow();
     } else {
       return notiTime.format("YYYY.MM.DD");
     }
