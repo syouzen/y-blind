@@ -6,6 +6,7 @@ import { EventProvider } from "@/contexts/event";
 import { cn } from "@/lib/utils";
 
 import RQProvider from "./_provider/rq-provider";
+import NextAuthProvider from "./_provider/session-provider";
 
 import "./globals.css";
 
@@ -49,25 +50,27 @@ export default function RootLayout({
   return (
     <html lang="ko" className={`${pretendard.variable}`}>
       <body id="yb-body">
-        <EventProvider>
-          <div
-            className={cn(
-              "flex items-start justify-center transition-opacity opacity-100 bg-white shadow-[0px_4px_8px_0px_#00000014]",
-              "relative w-full max-w-[var(--desktop-width)] min-h-[100dvh] mx-auto scrollbar-hide"
-            )}
-          >
-            <RQProvider>{children}</RQProvider>
-            <ToastContainer
-              closeButton={false}
-              pauseOnHover={false}
-              pauseOnFocusLoss={false}
-              position="top-center"
-              autoClose={2500}
-              limit={1}
-              hideProgressBar
-            />
-          </div>
-        </EventProvider>
+        <NextAuthProvider>
+          <EventProvider>
+            <div
+              className={cn(
+                "flex items-start justify-center transition-opacity opacity-100 bg-white shadow-[0px_4px_8px_0px_#00000014]",
+                "relative w-full max-w-[var(--desktop-width)] min-h-[100dvh] mx-auto scrollbar-hide"
+              )}
+            >
+              <RQProvider>{children}</RQProvider>
+              <ToastContainer
+                closeButton={false}
+                pauseOnHover={false}
+                pauseOnFocusLoss={false}
+                position="top-center"
+                autoClose={2500}
+                limit={1}
+                hideProgressBar
+              />
+            </div>
+          </EventProvider>
+        </NextAuthProvider>
       </body>
     </html>
   );
