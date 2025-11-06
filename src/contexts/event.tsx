@@ -112,7 +112,7 @@ export function EventProvider({ children }: EventProviderProps) {
       showLoading,
       hideLoading,
     }),
-    [showAlert, hideAlert, showConfirm, hideConfirm]
+    [showAlert, hideAlert, showConfirm, hideConfirm, showLoading, hideLoading]
   );
 
   return (

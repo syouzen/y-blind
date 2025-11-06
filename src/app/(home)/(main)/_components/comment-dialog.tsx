@@ -6,7 +6,6 @@ import { Virtuoso } from "react-virtuoso";
 import {
   useInfiniteQuery,
   useMutation,
-  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import { SendHorizontal } from "lucide-react";
@@ -51,7 +50,7 @@ export function CommentDialog({
         PostApi.getCommentList({
           postId,
           page: pageParam,
-          limit: 100,
+          limit: 50,
         }),
       getNextPageParam: (lastPage) => {
         if (lastPage.page < lastPage.totalPages) {
