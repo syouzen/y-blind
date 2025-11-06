@@ -2,7 +2,7 @@
 
 import { Virtuoso } from "react-virtuoso";
 
-import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 import Intersection from "@/components/intersection";
 import useVirtuosoSnapshot from "@/hooks/snapshot";
@@ -14,11 +14,11 @@ import { PostItem } from "./post-item";
 export function PostList() {
   const { virtuosoRef, snapshot } = useVirtuosoSnapshot("post-list-snapshot");
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useSuspenseInfiniteQuery({
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    useInfiniteQuery({
       queryKey: ["posts"],
       queryFn: ({ pageParam = 1 }) =>
-        PostApi.getPostList({ page: pageParam, limit: 10 }),
+        PostApi.getPostList({ page: pageParam, limit: 50 }),
       getNextPageParam: (lastPage) => {
         if (lastPage.page < lastPage.totalPages) {
           return lastPage.page + 1;
@@ -29,6 +29,14 @@ export function PostList() {
     });
 
   const posts = data ? data.pages.flatMap((page) => page.data) : [];
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center text-center gap-[16px] h-[calc(100dvh-54px)] text-gray-400">
+        로딩 중...
+      </div>
+    );
+  }
 
   return (
     <Virtuoso
