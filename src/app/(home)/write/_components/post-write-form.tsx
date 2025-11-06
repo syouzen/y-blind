@@ -2,10 +2,12 @@
 
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -16,6 +18,8 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { PostApi } from "@/query/post-api";
+import { ICreatePostPayload } from "@/types/api-payload";
 
 import "react-quill-new/dist/quill.snow.css";
 
@@ -41,10 +45,19 @@ export default function PostWriteForm() {
     },
   });
 
+  const { mutate: createPost } = useMutation({
+    mutationFn: (payload: ICreatePostPayload) => PostApi.createPost(payload),
+    onSuccess: () => {
+      router.push("/");
+    },
+    onError: () => {
+      toast.error("게시물 작성에 실패했어요");
+    },
+  });
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     console.log("게시물 작성:", values.content);
-    // TODO: API 호출 후 목록으로 이동
-    router.push("/");
+    createPost({ content: values.content });
   };
 
   const contentLength = form.watch("content")?.length || 0;

@@ -17,9 +17,9 @@ export default function Home() {
       </div>
 
       {/* 게시글 리스트 */}
-      {/* <ErrorResetBoundary> */}
-      <PostList />
-      {/* </ErrorResetBoundary> */}
+      <ErrorResetBoundary>
+        <PostList />
+      </ErrorResetBoundary>
     </div>
   );
 }
