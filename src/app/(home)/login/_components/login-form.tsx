@@ -1,6 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { signIn } from "next-auth/react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -49,7 +50,14 @@ export default function LoginForm() {
   });
 
   const onLogin = (values: z.infer<typeof formSchema>) => {
-    console.log(values.id, values.password);
+    signIn("credentials", {
+      id: values.id,
+      password: values.password,
+    });
+  };
+
+  const onSocialLogin = async (provider: string) => {
+    signIn(provider);
   };
 
   return (
@@ -96,6 +104,14 @@ export default function LoginForm() {
             </Button>
           </form>
         </Form>
+
+        <Button
+          type="button"
+          className="w-full bg-[#FEE500] text-black hover:bg-[#FEE500]/50"
+          onClick={() => onSocialLogin("kakao")}
+        >
+          Kakao로 로그인
+        </Button>
       </div>
     </div>
   );

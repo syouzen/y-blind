@@ -9,17 +9,16 @@ import useRecommendLaunchMenuStore from "@/store/recommend-launch-menu-store";
 export function MenuItemManager() {
   const [newItem, setNewItem] = useState("");
 
-  const { menuItems, setMenuItems } = useRecommendLaunchMenuStore();
+  const { menuItems, addMenuItem, removeMenuItem } =
+    useRecommendLaunchMenuStore();
 
   const handleAddItem = () => {
-    if (newItem.trim() && !menuItems.includes(newItem.trim())) {
-      setMenuItems([...menuItems, newItem.trim()]);
-      setNewItem("");
-    }
+    addMenuItem(newItem);
+    setNewItem("");
   };
 
   const handleRemoveItem = (index: number) => {
-    setMenuItems(menuItems.filter((_, i) => i !== index));
+    removeMenuItem(index);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {

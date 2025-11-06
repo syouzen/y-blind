@@ -1,61 +1,67 @@
+"use client";
+
+import { Virtuoso } from "react-virtuoso";
+
+import { useInfiniteQuery } from "@tanstack/react-query";
+
 import Intersection from "@/components/intersection";
+import useVirtuosoSnapshot from "@/hooks/snapshot";
+import { PostApi } from "@/query/post-api";
+import { IPost } from "@/types/api-response";
 
 import { PostItem } from "./post-item";
 
-interface Post {
-  id: string;
-  userName: string;
-  createdAt: string;
-  content: string;
-  likeCount: number;
-  commentCount: number;
-}
-
-// 예시 데이터
-const MOCK_POSTS: Post[] = [
-  {
-    id: "1",
-    userName: "익명의 기획자",
-    createdAt: "2시간 전",
-    content: "개발자가 말을 드럽게 안들어요.",
-    likeCount: 24,
-    commentCount: 8,
-  },
-  {
-    id: "2",
-    userName: "익명의 개발자",
-    createdAt: "10시간 전",
-    content: "기획자 말을 못듣는 개발자인 것 같아요.",
-    likeCount: 89,
-    commentCount: 31,
-  },
-  {
-    id: "3",
-    userName: "익명의 디자이너",
-    createdAt: "10시간 전",
-    content: "디자이너 말을 못듣는 개발자가 많아요.",
-    likeCount: 89,
-    commentCount: 31,
-  },
-];
-
 export function PostList() {
-  if (MOCK_POSTS.length === 0) {
+  const { virtuosoRef, snapshot } = useVirtuosoSnapshot("post-list-snapshot");
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    useInfiniteQuery({
+      queryKey: ["posts"],
+      queryFn: ({ pageParam = 1 }) =>
+        PostApi.getPostList({ page: pageParam, limit: 50 }),
+      getNextPageParam: (lastPage) => {
+        if (lastPage.page < lastPage.totalPages) {
+          return lastPage.page + 1;
+        }
+        return null;
+      },
+      initialPageParam: 1,
+    });
+
+  const posts = data ? data.pages.flatMap((page) => page.data) : [];
+
+  if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-[200px]">
-        <p className="font-body14r text-gray500">아직 게시글이 없습니다.</p>
+      <div className="flex flex-col items-center justify-center text-center gap-[16px] h-[calc(100dvh-54px)] text-gray-400">
+        로딩 중...
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col">
-      {/* NOTE : infinite scroll */}
-      {MOCK_POSTS.map((post) => (
-        <Intersection key={post.id}>
-          <PostItem {...post} />
+    <Virtuoso
+      ref={virtuosoRef}
+      restoreStateFrom={snapshot}
+      useWindowScroll
+      data={posts}
+      itemContent={(__: number, post: IPost) => (
+        <Intersection>
+          <PostItem data={post} />
         </Intersection>
-      ))}
-    </div>
+      )}
+      components={{
+        EmptyPlaceholder: () => (
+          <div className="flex flex-col items-center justify-center text-center gap-[16px] h-[calc(100dvh-54px)] text-gray-400">
+            게시글이 없어요! 첫 게시글을 작성해보세요.
+          </div>
+        ),
+      }}
+      endReached={() => {
+        if (hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      }}
+      className="h-full"
+    />
   );
 }

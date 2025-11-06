@@ -9,7 +9,7 @@ export interface IUserLoginPayload {
 }
 
 export interface IPostListPayload {
-  offset: number;
+  page: number;
   limit: number;
 }
 
@@ -19,11 +19,16 @@ export interface ICreatePostPayload {
 
 export interface ICommentListPayload {
   postId: string;
-  offset: number;
+  page: number;
   limit: number;
 }
 
 export interface ICreateCommentPayload {
   postId: string;
   content: string;
+}
+
+export interface ILoginPayload {
+  id: string;
+  password: string;
 }

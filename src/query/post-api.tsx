@@ -25,9 +25,12 @@ async function getPostList(payload: IPostListPayload) {
 
 async function getCommentList(payload: ICommentListPayload) {
   const { data: result } = await api.get<ICommentListResponse>(
-    `/post/${payload.postId}/comments`,
+    `/posts/${payload.postId}/comments`,
     {
-      params: payload,
+      params: {
+        page: payload.page,
+        limit: payload.limit,
+      },
     }
   );
   return result;
@@ -35,8 +38,24 @@ async function getCommentList(payload: ICommentListPayload) {
 
 async function createComment(payload: ICreateCommentPayload) {
   const { data: result } = await api.post<IResultResponse>(
-    `/post/${payload.postId}/comment`,
-    payload
+    `/posts/${payload.postId}/comments`,
+    {
+      content: payload.content,
+    }
+  );
+  return result;
+}
+
+async function likePost(postId: string) {
+  const { data: result } = await api.post<IResultResponse>(
+    `/posts/${postId}/like`
+  );
+  return result;
+}
+
+async function unlikePost(postId: string) {
+  const { data: result } = await api.delete<IResultResponse>(
+    `/posts/${postId}/like`
   );
   return result;
 }
@@ -46,4 +65,6 @@ export const PostApi = {
   getPostList,
   getCommentList,
   createComment,
+  likePost,
+  unlikePost,
 };
