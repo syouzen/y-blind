@@ -1,5 +1,3 @@
-"use client";
-
 import { Virtuoso } from "react-virtuoso";
 
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
@@ -7,18 +5,28 @@ import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import Intersection from "@/components/intersection";
 import useVirtuosoSnapshot from "@/hooks/snapshot";
 import { PostApi } from "@/query/post-api";
-import { IPost } from "@/types/api-response";
+import { IComment } from "@/types/api-response";
 
-import { PostItem } from "./post-item";
+import CommentItem from "./comment-item";
 
-export function PostList() {
-  const { virtuosoRef, snapshot } = useVirtuosoSnapshot("post-list-snapshot");
+interface CommentListProps {
+  postId: string;
+}
+
+const CommentList = ({ postId }: CommentListProps) => {
+  const { virtuosoRef, snapshot } = useVirtuosoSnapshot(
+    "comment-list-snapshot"
+  );
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useSuspenseInfiniteQuery({
-      queryKey: ["posts"],
+      queryKey: ["comments", postId],
       queryFn: ({ pageParam = 1 }) =>
-        PostApi.getPostList({ page: pageParam, limit: 50 }),
+        PostApi.getCommentList({
+          postId,
+          page: pageParam,
+          limit: 50,
+        }),
       getNextPageParam: (lastPage) => {
         if (lastPage.page < lastPage.totalPages) {
           return lastPage.page + 1;
@@ -28,23 +36,22 @@ export function PostList() {
       initialPageParam: 1,
     });
 
-  const posts = data ? data.pages.flatMap((page) => page.data) : [];
+  const comments = data ? data.pages.flatMap((page) => page.data) : [];
 
   return (
     <Virtuoso
       ref={virtuosoRef}
       restoreStateFrom={snapshot}
-      useWindowScroll
-      data={posts}
-      itemContent={(__: number, post: IPost) => (
+      data={comments}
+      itemContent={(__: number, comment: IComment) => (
         <Intersection>
-          <PostItem data={post} />
+          <CommentItem data={comment} />
         </Intersection>
       )}
       components={{
         EmptyPlaceholder: () => (
           <div className="flex flex-col items-center justify-center text-center gap-[16px] h-[calc(100dvh-54px)] text-gray-400">
-            게시글이 없어요! 첫 게시글을 작성해보세요.
+            댓글이 없어요! 첫 댓글을 작성해보세요.
           </div>
         ),
       }}
@@ -53,7 +60,9 @@ export function PostList() {
           fetchNextPage();
         }
       }}
-      className="h-full"
+      className="h-[450px] max-h-[450px]"
     />
   );
-}
+};
+
+export default CommentList;

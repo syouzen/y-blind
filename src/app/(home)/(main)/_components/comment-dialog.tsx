@@ -20,10 +20,12 @@ import {
 } from "@/components/ui/dialog";
 import { Spinner } from "@/components/ui/spinner";
 import useVirtuosoSnapshot from "@/hooks/snapshot";
+import ErrorResetBoundary from "@/lib/error-reset-boundary";
 import { PostApi } from "@/query/post-api";
 import { IComment } from "@/types/api-response";
 
 import CommentItem from "./comment-item";
+import CommentList from "./comment-list";
 
 interface CommentDialogProps {
   open: boolean;
@@ -59,6 +61,7 @@ export function CommentDialog({
         return null;
       },
       initialPageParam: 1,
+      enabled: open,
     });
 
   const comments = data ? data.pages.flatMap((page) => page.data) : [];
@@ -92,35 +95,15 @@ export function CommentDialog({
         </DialogHeader>
 
         {/* 댓글 목록 */}
-        {isLoading ? (
-          <div className="flex items-center justify-center py-[40px]">
-            <Spinner className="size-8 text-gray700" />
-          </div>
-        ) : (
-          <Virtuoso
-            ref={virtuosoRef}
-            restoreStateFrom={snapshot}
-            data={comments}
-            itemContent={(__: number, comment: IComment) => (
-              <Intersection>
-                <CommentItem data={comment} />
-              </Intersection>
-            )}
-            components={{
-              EmptyPlaceholder: () => (
-                <div className="flex flex-col items-center justify-center text-center gap-[16px] h-[calc(100dvh-54px)] text-gray-400">
-                  댓글이 없어요! 첫 댓글을 작성해보세요.
-                </div>
-              ),
-            }}
-            endReached={() => {
-              if (hasNextPage && !isFetchingNextPage) {
-                fetchNextPage();
-              }
-            }}
-            className="h-[450px]"
-          />
-        )}
+        <ErrorResetBoundary
+          suspenseFallback={
+            <div className="h-[450px] flex items-center justify-center">
+              <Spinner className="size-8 text-gray700" />
+            </div>
+          }
+        >
+          <CommentList postId={postId} />
+        </ErrorResetBoundary>
 
         {/* 댓글 입력 */}
         <form
