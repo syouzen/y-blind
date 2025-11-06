@@ -38,8 +38,10 @@ async function getCommentList(payload: ICommentListPayload) {
 
 async function createComment(payload: ICreateCommentPayload) {
   const { data: result } = await api.post<IResultResponse>(
-    `/posts/${payload.postId}/comment`,
-    payload
+    `/posts/${payload.postId}/comments`,
+    {
+      content: payload.content,
+    }
   );
   return result;
 }
