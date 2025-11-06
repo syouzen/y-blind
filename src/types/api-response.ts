@@ -33,3 +33,8 @@ export interface ICommentListResponse {
   limit: number;
   totalPages: number;
 }
+
+export interface ILoginResponse {
+  refreshToken: string;
+  accessToken: string;
+}

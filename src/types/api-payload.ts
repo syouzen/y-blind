@@ -27,3 +27,8 @@ export interface ICreateCommentPayload {
   postId: string;
   content: string;
 }
+
+export interface ILoginPayload {
+  id: string;
+  password: string;
+}
