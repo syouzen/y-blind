@@ -54,15 +54,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async signIn({ account, credentials }) {
       try {
         if (account?.provider === "credentials") {
-          const { email, password } = credentials as {
-            email: string;
+          const { id, password } = credentials as {
+            id: string;
             password: string;
           };
 
           const { data: loginData } = await api.post<ILoginResponse>(
-            "/auth/login/",
+            "/auth/sign-in",
             {
-              email,
+              id,
               password,
             }
           );
@@ -74,7 +74,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         // social login (provider 정보와 해당 provider의 token 정보가 필요합니다.)
         const { data: loginData } = await api.post<ILoginResponse>(
-          "/auth/social/",
+          "/auth/sign-in/social",
           {
             provider_type: account?.provider,
             token: account?.access_token,
