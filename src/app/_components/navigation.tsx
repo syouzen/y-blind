@@ -2,10 +2,21 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { signOut, useSession } from "next-auth/react";
+
+import { deleteCookie } from "cookies-next/client";
 
 import Image from "@/components/image";
 
 export function Navigation() {
+  const { status } = useSession();
+  const isLogin = status === "authenticated";
+
+  const onLogout = () => {
+    signOut();
+    deleteCookie("access_token");
+  };
+
   return (
     <nav className="sticky top-0 z-49 bg-white flex w-full items-center justify-between px-[16px] py-[8px] h-[56px]">
       <Link href="/" className="inline-flex items-center">
@@ -25,12 +36,21 @@ export function Navigation() {
         >
           미니게임
         </Link>
-        <Link
-          href="/login"
-          className="inline-flex h-[36px] items-center justify-center rounded-md px-[16px] py-[8px] text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
-        >
-          로그인
-        </Link>
+        {isLogin ? (
+          <button
+            onClick={onLogout}
+            className="inline-flex h-[36px] items-center justify-center rounded-md px-[16px] py-[8px] text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+          >
+            로그아웃
+          </button>
+        ) : (
+          <Link
+            href="/login"
+            className="inline-flex h-[36px] items-center justify-center rounded-md px-[16px] py-[8px] text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+          >
+            로그인
+          </Link>
+        )}
       </div>
     </nav>
   );
