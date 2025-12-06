@@ -35,6 +35,9 @@ export interface ICommentListResponse {
 }
 
 export interface ILoginResponse {
-  refreshToken: string;
+  id: number;
+  username: string;
+  nickname: string | null;
   accessToken: string;
+  refreshToken: string;
 }

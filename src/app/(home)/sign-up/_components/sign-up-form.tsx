@@ -1,9 +1,11 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { signIn } from "next-auth/react";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -16,9 +18,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { AuthApi } from "@/query/auth-api";
+import { ISignUpPayload } from "@/types/api-payload";
 
 const formSchema = z.object({
-  id: z
+  username: z
     .string()
     .min(1, {
       message: "아이디를 입력해주세요.",
@@ -29,7 +33,7 @@ const formSchema = z.object({
     .regex(/^[a-z0-9_-]+$/, {
       message: "아이디는 영문 소문자, 숫자, _, -만 사용할 수 있습니다.",
     }),
-  password: z
+  pw: z
     .string()
     .min(8, {
       message: "비밀번호는 최소 8자 이상이어야 합니다.",
@@ -40,24 +44,32 @@ const formSchema = z.object({
     }),
 });
 
-export default function LoginForm() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      id: "",
-      password: "",
+export default function SignUpForm() {
+  const router = useRouter();
+
+  const { mutate: signUp } = useMutation({
+    mutationFn: (payload: ISignUpPayload) => AuthApi.signUp(payload),
+    onSuccess: () => {
+      router.push("/sign-in");
+    },
+    onError: () => {
+      toast.error("회원가입에 실패했어요");
     },
   });
 
-  const onLogin = (values: z.infer<typeof formSchema>) => {
-    signIn("credentials", {
-      id: values.id,
-      password: values.password,
-    });
-  };
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+      pw: "",
+    },
+  });
 
-  const onSocialLogin = async (provider: string) => {
-    signIn(provider);
+  const onSignUp = (values: z.infer<typeof formSchema>) => {
+    signUp({
+      username: values.username,
+      pw: values.pw,
+    });
   };
 
   return (
@@ -66,12 +78,12 @@ export default function LoginForm() {
         <h1 className="text-2xl font-bold">로그인</h1>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onLogin)}
+            onSubmit={form.handleSubmit(onSignUp)}
             className="w-full space-y-[16px]"
           >
             <FormField
               control={form.control}
-              name="id"
+              name="username"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>아이디</FormLabel>
@@ -84,7 +96,7 @@ export default function LoginForm() {
             />
             <FormField
               control={form.control}
-              name="password"
+              name="pw"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>비밀번호</FormLabel>
@@ -100,18 +112,10 @@ export default function LoginForm() {
               )}
             />
             <Button type="submit" className="w-full">
-              로그인
+              회원가입
             </Button>
           </form>
         </Form>
-
-        <Button
-          type="button"
-          className="w-full bg-[#FEE500] text-black hover:bg-[#FEE500]/50"
-          onClick={() => onSocialLogin("kakao")}
-        >
-          Kakao로 로그인
-        </Button>
       </div>
     </div>
   );

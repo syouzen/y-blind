@@ -10,8 +10,8 @@ class AxiosInstance {
   private instance = axios.create({
     baseURL:
       process.env.NODE_ENV === "development"
-        ? "/api-proxy"
-        : process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:4000",
+        ? "http://localhost:4000"
+        : process.env.NEXT_PUBLIC_BASE_URL,
   });
 
   constructor() {
