@@ -1,24 +1,24 @@
 import api from "@/lib/api";
-import { IUserJoinPayload, IUserLoginPayload } from "@/types/api-payload";
+import { ISignInPayload, ISignUpPayload } from "@/types/api-payload";
 import { IResultResponse } from "@/types/api-response";
 
-async function join(payload: IUserJoinPayload) {
+async function signUp(payload: ISignUpPayload) {
   const { data: result } = await api.post<IResultResponse>(
-    "/user/join/",
+    "/auth/sign-up",
     payload
   );
   return result;
 }
 
-async function login(payload: IUserLoginPayload) {
+async function signIn(payload: ISignInPayload) {
   const { data: result } = await api.post<IResultResponse>(
-    "/user/login/",
+    "/auth/sign-in",
     payload
   );
   return result;
 }
 
 export const AuthApi = {
-  join,
-  login,
+  signUp,
+  signIn,
 };

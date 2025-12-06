@@ -10,7 +10,7 @@ import api from "./lib/api";
 import { ILoginResponse } from "./types/api-response";
 
 const signInSchema = object({
-  id: string()
+  username: string()
     .min(1, {
       message: "아이디를 입력해주세요.",
     })
@@ -20,7 +20,7 @@ const signInSchema = object({
     .regex(/^[a-z0-9_-]+$/, {
       message: "아이디는 영문 소문자, 숫자, _, -만 사용할 수 있습니다.",
     }),
-  password: string()
+  pw: string()
     .min(8, {
       message: "비밀번호는 최소 8자 이상이어야 합니다.",
     })
@@ -35,59 +35,89 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
       credentials: {
-        id: { label: "ID", type: "id" },
-        password: { label: "Password", type: "password" },
+        username: { label: "ID", type: "id" },
+        pw: { label: "비밀번호", type: "password" },
       },
       authorize: async (credentials) => {
-        const { id, password } = await signInSchema.parseAsync(credentials);
-        return { id, password };
-      },
-    }),
-    Kakao,
-  ],
-  pages: {
-    signIn: "/login",
-    signOut: "/login",
-    error: "/login",
-  },
-  callbacks: {
-    async signIn({ account, credentials }) {
-      try {
-        if (account?.provider === "credentials") {
-          const { id, password } = credentials as {
-            id: string;
-            password: string;
-          };
+        try {
+          const { username, pw } = await signInSchema.parseAsync(credentials);
 
           const { data: loginData } = await api.post<ILoginResponse>(
             "/auth/sign-in",
             {
-              id,
-              password,
+              username,
+              pw,
             }
           );
 
           await setCookie("access_token", loginData.accessToken, { cookies });
 
-          return "/";
+          return {
+            id: loginData.id.toString(),
+            name: loginData.username,
+          };
+        } catch (error) {
+          console.log("authorize error", error);
+          return null;
+        }
+      },
+    }),
+    Kakao,
+  ],
+  pages: {
+    signIn: "/sign-in",
+    signOut: "/sign-in",
+    error: "/sign-in",
+  },
+  callbacks: {
+    async signIn({ account, user }) {
+      try {
+        if (account?.provider === "kakao") {
+          const { data: loginData } = await api.post<ILoginResponse>(
+            "/auth/sign-in/kakao",
+            {
+              provider_type: account?.provider,
+              token: account?.access_token,
+            }
+          );
+
+          await setCookie("access_token", loginData.accessToken, { cookies });
+
+          // user 정보 업데이트
+          if (user) {
+            user.id = loginData.id.toString();
+            user.name = loginData.username;
+          }
         }
 
-        // social login (provider 정보와 해당 provider의 token 정보가 필요합니다.)
-        const { data: loginData } = await api.post<ILoginResponse>(
-          "/auth/sign-in/social",
-          {
-            provider_type: account?.provider,
-            token: account?.access_token,
-          }
-        );
-
-        await setCookie("access_token", loginData.accessToken, { cookies });
-
-        return "/";
+        return true;
       } catch (error) {
-        console.log("authjs error", error);
+        console.log("signIn callback error", error);
         return false;
       }
+    },
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith(baseUrl)) {
+        return baseUrl + "/";
+      }
+      if (url.startsWith("/")) {
+        return baseUrl + url;
+      }
+      return baseUrl + "/";
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.name = user.name;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token && session.user) {
+        session.user.id = token.id as string;
+        session.user.name = token.name as string;
+      }
+      return session;
     },
   },
 });
