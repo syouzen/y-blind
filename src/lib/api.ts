@@ -11,7 +11,7 @@ class AxiosInstance {
     baseURL:
       process.env.NODE_ENV === "development"
         ? typeof window === "undefined"
-          ? "http://localhost:4000"
+          ? process.env.NEXT_PUBLIC_BASE_URL
           : "/api-proxy"
         : process.env.NEXT_PUBLIC_BASE_URL,
   });

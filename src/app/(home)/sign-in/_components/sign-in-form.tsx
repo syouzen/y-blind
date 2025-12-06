@@ -47,7 +47,7 @@ export default function SignInForm() {
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
-      <div className="flex flex-col items-center justify-center gap-[24px] w-full max-w-[400px]">
+      <div className="flex flex-col items-center justify-center gap-[12px] w-full max-w-[400px]">
         <h1 className="text-2xl font-bold">로그인</h1>
         <Form {...form}>
           <form
