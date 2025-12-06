@@ -17,42 +17,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
-const formSchema = z.object({
-  username: z
-    .string()
-    .min(1, {
-      message: "아이디를 입력해주세요.",
-    })
-    .max(12, {
-      message: "아이디는 12자 이내로 입력해주세요.",
-    })
-    .regex(/^[a-z0-9_-]+$/, {
-      message: "아이디는 영문 소문자, 숫자, _, -만 사용할 수 있습니다.",
-    }),
-  pw: z
-    .string()
-    .min(8, {
-      message: "비밀번호는 최소 8자 이상이어야 합니다.",
-    })
-    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/, {
-      message:
-        "비밀번호는 대문자, 소문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.",
-    }),
-});
+import { signSchema } from "@/lib/scheme";
 
 export default function SignInForm() {
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof signSchema>>({
+    resolver: zodResolver(signSchema),
     defaultValues: {
       username: "",
       pw: "",
     },
   });
 
-  const onLogin = (values: z.infer<typeof formSchema>) => {
+  const onLogin = (values: z.infer<typeof signSchema>) => {
     signIn("credentials", {
       username: values.username,
       pw: values.pw,

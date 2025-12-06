@@ -18,31 +18,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { signSchema } from "@/lib/scheme";
 import { AuthApi } from "@/query/auth-api";
 import { ISignUpPayload } from "@/types/api-payload";
-
-const formSchema = z.object({
-  username: z
-    .string()
-    .min(1, {
-      message: "아이디를 입력해주세요.",
-    })
-    .max(12, {
-      message: "아이디는 12자 이내로 입력해주세요.",
-    })
-    .regex(/^[a-z0-9_-]+$/, {
-      message: "아이디는 영문 소문자, 숫자, _, -만 사용할 수 있습니다.",
-    }),
-  pw: z
-    .string()
-    .min(8, {
-      message: "비밀번호는 최소 8자 이상이어야 합니다.",
-    })
-    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/, {
-      message:
-        "비밀번호는 대문자, 소문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.",
-    }),
-});
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -57,15 +35,15 @@ export default function SignUpForm() {
     },
   });
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof signSchema>>({
+    resolver: zodResolver(signSchema),
     defaultValues: {
       username: "",
       pw: "",
     },
   });
 
-  const onSignUp = (values: z.infer<typeof formSchema>) => {
+  const onSignUp = (values: z.infer<typeof signSchema>) => {
     signUp({
       username: values.username,
       pw: values.pw,
@@ -75,7 +53,7 @@ export default function SignUpForm() {
   return (
     <div className="flex flex-col items-center justify-center w-full">
       <div className="flex flex-col items-center justify-center gap-[24px] w-full max-w-[400px]">
-        <h1 className="text-2xl font-bold">로그인</h1>
+        <h1 className="text-2xl font-bold">회원가입</h1>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSignUp)}

@@ -18,6 +18,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { postSchema } from "@/lib/scheme";
 import { PostApi } from "@/query/post-api";
 import { ICreatePostPayload } from "@/types/api-payload";
 
@@ -25,21 +26,10 @@ import "react-quill-new/dist/quill.snow.css";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
-const formSchema = z.object({
-  content: z
-    .string()
-    .min(1, {
-      message: "내용을 입력해주세요.",
-    })
-    .max(5000, {
-      message: "내용은 5000자 이내로 입력해주세요.",
-    }),
-});
-
 export default function PostWriteForm() {
   const router = useRouter();
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof postSchema>>({
+    resolver: zodResolver(postSchema),
     defaultValues: {
       content: "",
     },
@@ -55,7 +45,7 @@ export default function PostWriteForm() {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = (values: z.infer<typeof postSchema>) => {
     console.log("게시물 작성:", values.content);
     createPost({ content: values.content });
   };

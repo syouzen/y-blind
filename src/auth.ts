@@ -43,7 +43,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           const { username, pw } = await signInSchema.parseAsync(credentials);
 
           const { data: loginData } = await api.post<ILoginResponse>(
-            `${process.env.NEXT_PUBLIC_BASE_URL}/auth/sign-in`,
+            "/auth/sign-in",
             {
               username,
               pw,
@@ -74,7 +74,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       try {
         if (account?.provider === "kakao") {
           const { data: loginData } = await api.post<ILoginResponse>(
-            `${process.env.NEXT_PUBLIC_BASE_URL}/auth/sign-in/kakao`,
+            "/auth/sign-in/kakao",
             {
               provider_type: account?.provider,
               token: account?.access_token,
