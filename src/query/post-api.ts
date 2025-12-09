@@ -12,7 +12,7 @@ import {
 } from "@/types/api-response";
 
 async function createPost(payload: ICreatePostPayload) {
-  const { data: result } = await api.post<IResultResponse>("/post", payload);
+  const { data: result } = await api.post<IResultResponse>("/posts", payload);
   return result;
 }
 

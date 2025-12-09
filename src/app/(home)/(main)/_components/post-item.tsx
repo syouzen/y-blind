@@ -62,9 +62,10 @@ export function PostItem({ data }: PostItemProps) {
       </div>
 
       {/* 글 내용 */}
-      <p className="font-body14r text-gray800 whitespace-pre-wrap">
-        {data.content}
-      </p>
+      <div
+        className="font-body14r text-gray800 whitespace-pre-wrap"
+        dangerouslySetInnerHTML={{ __html: data.content }}
+      />
 
       {/* 액션 버튼들 */}
       <div className="flex items-center gap-[16px]">
