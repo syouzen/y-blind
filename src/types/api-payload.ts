@@ -1,11 +1,11 @@
-export interface IUserJoinPayload {
-  id: string;
-  password: string;
+export interface ISignUpPayload {
+  username: string;
+  pw: string;
 }
 
-export interface IUserLoginPayload {
-  id: string;
-  password: string;
+export interface ISignInPayload {
+  username: string;
+  pw: string;
 }
 
 export interface IPostListPayload {

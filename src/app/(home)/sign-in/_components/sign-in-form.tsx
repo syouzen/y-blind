@@ -1,6 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,43 +17,23 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { signSchema } from "@/lib/scheme";
 
-const formSchema = z.object({
-  id: z
-    .string()
-    .min(1, {
-      message: "아이디를 입력해주세요.",
-    })
-    .max(12, {
-      message: "아이디는 12자 이내로 입력해주세요.",
-    })
-    .regex(/^[a-z0-9_-]+$/, {
-      message: "아이디는 영문 소문자, 숫자, _, -만 사용할 수 있습니다.",
-    }),
-  password: z
-    .string()
-    .min(8, {
-      message: "비밀번호는 최소 8자 이상이어야 합니다.",
-    })
-    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/, {
-      message:
-        "비밀번호는 대문자, 소문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.",
-    }),
-});
+export default function SignInForm() {
+  const router = useRouter();
 
-export default function LoginForm() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof signSchema>>({
+    resolver: zodResolver(signSchema),
     defaultValues: {
-      id: "",
-      password: "",
+      username: "",
+      pw: "",
     },
   });
 
-  const onLogin = (values: z.infer<typeof formSchema>) => {
+  const onLogin = (values: z.infer<typeof signSchema>) => {
     signIn("credentials", {
-      id: values.id,
-      password: values.password,
+      username: values.username,
+      pw: values.pw,
     });
   };
 
@@ -60,9 +41,13 @@ export default function LoginForm() {
     signIn(provider);
   };
 
+  const onSignup = () => {
+    router.push("/sign-up");
+  };
+
   return (
     <div className="flex flex-col items-center justify-center w-full">
-      <div className="flex flex-col items-center justify-center gap-[24px] w-full max-w-[400px]">
+      <div className="flex flex-col items-center justify-center gap-[12px] w-full max-w-[400px]">
         <h1 className="text-2xl font-bold">로그인</h1>
         <Form {...form}>
           <form
@@ -71,7 +56,7 @@ export default function LoginForm() {
           >
             <FormField
               control={form.control}
-              name="id"
+              name="username"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>아이디</FormLabel>
@@ -84,7 +69,7 @@ export default function LoginForm() {
             />
             <FormField
               control={form.control}
-              name="password"
+              name="pw"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>비밀번호</FormLabel>
@@ -110,8 +95,16 @@ export default function LoginForm() {
           className="w-full bg-[#FEE500] text-black hover:bg-[#FEE500]/50"
           onClick={() => onSocialLogin("kakao")}
         >
-          Kakao로 로그인
+          카카오로 3초만에 로그인
         </Button>
+
+        <button
+          type="button"
+          className="w-full bg-transparent font-body14r text-black underline hover:opacity-80"
+          onClick={onSignup}
+        >
+          회원가입
+        </button>
       </div>
     </div>
   );
