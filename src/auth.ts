@@ -7,6 +7,7 @@ import { setCookie } from "cookies-next/server";
 import { object, string } from "zod";
 
 import api from "./lib/api";
+import { AuthApi } from "./query/auth-api";
 import { ILoginResponse } from "./types/api-response";
 
 const signInSchema = object({
@@ -42,15 +43,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         try {
           const { username, pw } = await signInSchema.parseAsync(credentials);
 
-          const { data: loginData } = await api.post<ILoginResponse>(
-            "/auth/sign-in",
-            {
-              username,
-              pw,
-            }
-          );
+          const loginData = await AuthApi.signIn({
+            username,
+            pw,
+          });
 
           await setCookie("access_token", loginData.accessToken, { cookies });
+          await setCookie("refresh_token", loginData.refreshToken, { cookies });
 
           return {
             id: loginData.id.toString(),
