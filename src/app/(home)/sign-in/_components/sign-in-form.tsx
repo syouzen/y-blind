@@ -1,8 +1,9 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn as nextAuthSignIn } from "next-auth/react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -30,15 +31,28 @@ export default function SignInForm() {
     },
   });
 
-  const onLogin = (values: z.infer<typeof signSchema>) => {
-    signIn("credentials", {
-      username: values.username,
-      pw: values.pw,
-    });
+  const onLogin = async (values: z.infer<typeof signSchema>) => {
+    try {
+      const result = await nextAuthSignIn("credentials", {
+        username: values.username,
+        pw: values.pw,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        toast.error("아이디 / 비밀번호를 확인해주세요.");
+      } else {
+        router.push("/");
+      }
+    } catch {
+      toast.error("아이디 / 비밀번호를 확인해주세요.");
+    }
   };
 
   const onSocialLogin = async (provider: string) => {
-    signIn(provider);
+    await nextAuthSignIn(provider, {
+      callbackUrl: "/",
+    });
   };
 
   const onSignup = () => {

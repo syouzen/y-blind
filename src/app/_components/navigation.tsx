@@ -14,7 +14,9 @@ export function Navigation() {
 
   const onLogout = () => {
     signOut();
+
     deleteCookie("access_token");
+    deleteCookie("refresh_token");
   };
 
   return (

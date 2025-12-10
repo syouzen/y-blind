@@ -6,8 +6,7 @@ import Kakao from "next-auth/providers/kakao";
 import { setCookie } from "cookies-next/server";
 import { object, string } from "zod";
 
-import api from "./lib/api";
-import { ILoginResponse } from "./types/api-response";
+import { AuthApi } from "./query/auth-api";
 
 const signInSchema = object({
   username: string()
@@ -42,15 +41,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         try {
           const { username, pw } = await signInSchema.parseAsync(credentials);
 
-          const { data: loginData } = await api.post<ILoginResponse>(
-            "/auth/sign-in",
-            {
-              username,
-              pw,
-            }
-          );
+          const loginData = await AuthApi.signIn({
+            username,
+            pw,
+          });
 
           await setCookie("access_token", loginData.accessToken, { cookies });
+          await setCookie("refresh_token", loginData.refreshToken, { cookies });
 
           return {
             id: loginData.id.toString(),
@@ -62,7 +59,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
       },
     }),
-    Kakao,
+    Kakao({
+      clientId: process.env.AUTH_KAKAO_ID || "",
+      clientSecret: process.env.AUTH_KAKAO_SECRET || "",
+    }),
   ],
   pages: {
     signIn: "/sign-in",
@@ -73,15 +73,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async signIn({ account, user }) {
       try {
         if (account?.provider === "kakao") {
-          const { data: loginData } = await api.post<ILoginResponse>(
-            "/auth/sign-in/kakao",
-            {
-              provider_type: account?.provider,
-              token: account?.access_token,
-            }
-          );
+          const loginData = await AuthApi.signInKakao({
+            token: account.access_token || "",
+          });
 
           await setCookie("access_token", loginData.accessToken, { cookies });
+          await setCookie("refresh_token", loginData.refreshToken, { cookies });
 
           // user 정보 업데이트
           if (user) {

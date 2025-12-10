@@ -8,6 +8,10 @@ export interface ISignInPayload {
   pw: string;
 }
 
+export interface IKakaoSignInPayload {
+  token: string;
+}
+
 export interface IPostListPayload {
   page: number;
   limit: number;
