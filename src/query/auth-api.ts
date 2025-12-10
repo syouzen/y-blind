@@ -1,5 +1,9 @@
 import api from "@/lib/api";
-import { ISignInPayload, ISignUpPayload } from "@/types/api-payload";
+import {
+  IKakaoSignInPayload,
+  ISignInPayload,
+  ISignUpPayload,
+} from "@/types/api-payload";
 import { ILoginResponse, IResultResponse } from "@/types/api-response";
 
 async function signUp(payload: ISignUpPayload) {
@@ -18,7 +22,16 @@ async function signIn(payload: ISignInPayload) {
   return result;
 }
 
+async function signInKakao(payload: IKakaoSignInPayload) {
+  const { data: result } = await api.post<ILoginResponse>(
+    "/auth/sign-in/kakao",
+    payload
+  );
+  return result;
+}
+
 export const AuthApi = {
   signUp,
   signIn,
+  signInKakao,
 };
