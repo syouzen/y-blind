@@ -1,20 +1,36 @@
 "use client";
 
 import * as React from "react";
+import { toast } from "react-toastify";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 
 import { deleteCookie } from "cookies-next/client";
 
 import Image from "@/components/image";
+import { AuthApi } from "@/query/auth-api";
 
 export function Navigation() {
-  const { status } = useSession();
+  const { status, data } = useSession();
   const isLogin = status === "authenticated";
 
-  const onLogout = () => {
-    signOut();
-    deleteCookie("access_token");
+  const onLogout = async () => {
+    try {
+      const { result } = await AuthApi.logout(Number(data?.user?.id));
+
+      if (result) {
+        signOut();
+
+        deleteCookie("access_token");
+        deleteCookie("refresh_token");
+      } else {
+        toast.error("로그아웃에 실패했어요. 다시 시도해주세요.");
+      }
+    } catch (error) {
+      console.error("logout error", error);
+
+      toast.error("로그아웃 처리 중 문제가 발생했어요. 다시 시도해주세요.");
+    }
   };
 
   return (
