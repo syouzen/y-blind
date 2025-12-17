@@ -51,6 +51,8 @@ export function PostItem({ data }: PostItemProps) {
     }
   };
 
+  console.log(data);
+
   return (
     <div className="flex flex-col gap-[12px] p-[16px] bg-white border-b border-gray200">
       {/* 사용자 정보 */}
@@ -65,7 +67,7 @@ export function PostItem({ data }: PostItemProps) {
 
       {/* 글 내용 */}
       <div
-        className="font-body14r text-gray800 whitespace-pre-wrap"
+        className="ql-content text-gray800"
         dangerouslySetInnerHTML={{ __html: data.content }}
       />
 

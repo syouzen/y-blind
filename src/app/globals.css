@@ -399,3 +399,123 @@
 .quill-editor button.ql-active .ql-fill {
   fill: #2563eb;
 }
+
+/* Quill Content Renderer Styles */
+.ql-content {
+  font-size: 14px;
+  line-height: 22px;
+  word-break: break-word;
+}
+
+.ql-content p {
+  margin: 0;
+}
+
+.ql-content h1 {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 0.67em 0;
+}
+
+.ql-content h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0.83em 0;
+}
+
+.ql-content h3 {
+  font-size: 1.17em;
+  font-weight: bold;
+  margin: 1em 0;
+}
+
+.ql-content strong {
+  font-weight: bold;
+}
+
+.ql-content em {
+  font-style: italic;
+}
+
+.ql-content u {
+  text-decoration: underline;
+}
+
+.ql-content s {
+  text-decoration: line-through;
+}
+
+.ql-content blockquote {
+  border-left: 4px solid #ccc;
+  margin: 5px 0;
+  padding-left: 16px;
+  color: #666;
+}
+
+.ql-content pre {
+  background-color: #23241f;
+  color: #f8f8f2;
+  overflow: auto;
+  padding: 12px;
+  border-radius: 4px;
+  font-family:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono",
+    monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 8px 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.ql-content pre.ql-syntax,
+.ql-content pre[class*="ql-"] {
+  background-color: #23241f;
+  color: #f8f8f2;
+}
+
+.ql-content .ql-code-block-container {
+  background-color: #23241f;
+  color: #f8f8f2;
+  overflow: auto;
+  padding: 12px;
+  border-radius: 4px;
+  font-family:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono",
+    monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 8px 0;
+}
+
+.ql-content .ql-code-block {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.ql-content ol,
+.ql-content ul {
+  padding-left: 24px;
+  margin: 0;
+}
+
+.ql-content ol {
+  list-style-type: decimal;
+}
+
+.ql-content ul {
+  list-style-type: disc;
+}
+
+.ql-content li {
+  padding-left: 4px;
+}
+
+.ql-content a {
+  color: #0284c7;
+  text-decoration: underline;
+}
+
+.ql-content a:hover {
+  color: #0369a1;
+}
