@@ -46,14 +46,14 @@ async function createComment(payload: ICreateCommentPayload) {
   return result;
 }
 
-async function likePost(postId: string) {
+async function likePost(postId: number) {
   const { data: result } = await api.post<IResultResponse>(
     `/posts/${postId}/like`
   );
   return result;
 }
 
-async function unlikePost(postId: string) {
+async function unlikePost(postId: number) {
   const { data: result } = await api.delete<IResultResponse>(
     `/posts/${postId}/like`
   );

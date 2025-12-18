@@ -16,13 +16,14 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import ErrorResetBoundary from "@/lib/error-reset-boundary";
 import { PostApi } from "@/query/post-api";
+import { ICreateCommentPayload } from "@/types/api-payload";
 
 import CommentList from "./comment-list";
 
 interface CommentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  postId: string;
+  postId: number;
 }
 
 export function CommentDialog({
@@ -36,8 +37,9 @@ export function CommentDialog({
   const [comment, setComment] = useState("");
   const queryClient = useQueryClient();
 
-  const createCommentMutation = useMutation({
-    mutationFn: PostApi.createComment,
+  const { mutate: createComment, isPending } = useMutation({
+    mutationFn: (payload: ICreateCommentPayload) =>
+      PostApi.createComment(payload),
     onSuccess: () => {
       setComment("");
       queryClient.invalidateQueries({ queryKey: ["comments", postId] });
@@ -49,7 +51,7 @@ export function CommentDialog({
     e.preventDefault();
     if (!comment.trim()) return;
 
-    createCommentMutation.mutate({
+    createComment({
       postId,
       content: comment,
     });
@@ -91,13 +93,11 @@ export function CommentDialog({
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               className="flex-1 px-[16px] py-[12px] rounded-[8px] border border-gray-300 font-body14r text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-gray-900"
-              disabled={createCommentMutation.isPending || !isLogin}
+              disabled={isPending || !isLogin}
             />
             <Button
               type="submit"
-              disabled={
-                !comment.trim() || createCommentMutation.isPending || !isLogin
-              }
+              disabled={!comment.trim() || isPending || !isLogin}
               className="h-[48px] w-[48px] shrink-0 rounded-[8px] bg-gray-900 hover:bg-gray-800 disabled:bg-gray-300"
             >
               <SendHorizontal className="size-5 text-white" />
