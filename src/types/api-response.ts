@@ -14,7 +14,8 @@ export interface IPost {
   updatedAt: string;
   content: string;
   likeCount: number;
-  commentCount: number;
+  commentsCount: number;
+  isLikedByMe: boolean;
 }
 
 export interface IPostListResponse {
@@ -31,6 +32,11 @@ export interface IComment {
   createdAt: string;
   updatedAt: string;
   content: string;
+  likeCount: number;
+  isLikedByMe: boolean;
+  parentCommentId: string | null;
+  postId: number;
+  replies: IComment[];
 }
 
 export interface ICommentListResponse {

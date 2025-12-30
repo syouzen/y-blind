@@ -1,13 +1,13 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -20,15 +20,28 @@ import {
 } from "@/components/ui/form";
 import { postSchema } from "@/lib/scheme";
 import { PostApi } from "@/query/post-api";
-import { ICreatePostPayload } from "@/types/api-payload";
 
 import "react-quill-new/dist/quill.snow.css";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
-export default function PostWriteForm() {
+export default function PostEditForm({ postId }: { postId: number }) {
   const router = useRouter();
   const queryClient = useQueryClient();
+
+  const { data: post, isSuccess } = useQuery({
+    queryKey: ["posts", postId],
+    queryFn: () => PostApi.getPost(postId),
+    enabled: !!postId,
+  });
+
+  useEffect(() => {
+    if (isSuccess && post) {
+      form.reset({
+        content: post.content,
+      });
+    }
+  }, [post]);
 
   const form = useForm<z.infer<typeof postSchema>>({
     resolver: zodResolver(postSchema),
@@ -37,20 +50,21 @@ export default function PostWriteForm() {
     },
   });
 
-  const { mutate: createPost } = useMutation({
-    mutationFn: (payload: ICreatePostPayload) => PostApi.createPost(payload),
+  const { mutate: editPost } = useMutation({
+    mutationFn: ({ postId, content }: { postId: number; content: string }) =>
+      PostApi.editPost(postId, content),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       router.push("/");
+      toast.success("게시물을 수정했어요");
     },
     onError: () => {
-      toast.error("게시물 작성에 실패했어요");
+      toast.error("게시물 수정에 실패했어요");
     },
   });
 
   const onSubmit = (values: z.infer<typeof postSchema>) => {
-    console.log("게시물 작성:", values.content);
-    createPost({ title: "test", content: values.content });
+    editPost({ postId, content: values.content });
   };
 
   const contentLength = form.watch("content")?.length || 0;
