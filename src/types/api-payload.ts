@@ -18,6 +18,7 @@ export interface IPostListPayload {
 }
 
 export interface ICreatePostPayload {
+  title: string;
   content: string;
 }
 

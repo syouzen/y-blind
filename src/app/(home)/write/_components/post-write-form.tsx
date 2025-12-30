@@ -47,7 +47,7 @@ export default function PostWriteForm() {
 
   const onSubmit = (values: z.infer<typeof postSchema>) => {
     console.log("게시물 작성:", values.content);
-    createPost({ content: values.content });
+    createPost({ title: "test", content: values.content });
   };
 
   const contentLength = form.watch("content")?.length || 0;

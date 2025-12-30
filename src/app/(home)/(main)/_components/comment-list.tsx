@@ -28,15 +28,12 @@ const CommentList = ({ postId }: CommentListProps) => {
           limit: 50,
         }),
       getNextPageParam: (lastPage) => {
-        if (lastPage.page < lastPage.totalPages) {
-          return lastPage.page + 1;
-        }
-        return null;
+        return lastPage.length === 50 ? lastPage.length + 1 : null;
       },
       initialPageParam: 1,
     });
 
-  const comments = data ? data.pages.flatMap((page) => page.data) : [];
+  const comments = data ? data.pages.flatMap((page) => page) : [];
 
   return (
     <Virtuoso
@@ -60,7 +57,7 @@ const CommentList = ({ postId }: CommentListProps) => {
           fetchNextPage();
         }
       }}
-      className="h-[450px] max-h-[450px]"
+      className="h-[450px] min-h-[450px]"
     />
   );
 };

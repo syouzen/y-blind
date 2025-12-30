@@ -6,7 +6,7 @@ import {
   IPostListPayload,
 } from "@/types/api-payload";
 import {
-  ICommentListResponse,
+  IComment,
   IPostListResponse,
   IResultResponse,
 } from "@/types/api-response";
@@ -24,7 +24,7 @@ async function getPostList(payload: IPostListPayload) {
 }
 
 async function getCommentList(payload: ICommentListPayload) {
-  const { data: result } = await api.get<ICommentListResponse>(
+  const { data: result } = await api.get<IComment[]>(
     `/posts/${payload.postId}/comments`,
     {
       params: {
