@@ -7,12 +7,18 @@ import {
 } from "@/types/api-payload";
 import {
   IComment,
+  IPost,
   IPostListResponse,
   IResultResponse,
 } from "@/types/api-response";
 
 async function createPost(payload: ICreatePostPayload) {
   const { data: result } = await api.post<IResultResponse>("/posts", payload);
+  return result;
+}
+
+async function getPost(postId: number) {
+  const { data: result } = await api.get<IPost>(`/posts/${postId}`);
   return result;
 }
 
@@ -61,6 +67,23 @@ async function unlikePost(postId: number) {
   return result;
 }
 
+async function deletePost(postId: number) {
+  const { data: result } = await api.delete<IResultResponse>(
+    `/posts/${postId}`
+  );
+  return result;
+}
+
+async function editPost(postId: number, content: string) {
+  const { data: result } = await api.patch<IResultResponse>(
+    `/posts/${postId}`,
+    {
+      content,
+    }
+  );
+  return result;
+}
+
 async function likeComment(commentId: number) {
   const { data: result } = await api.post<IResultResponse>(
     `/comments/${commentId}/likes`
@@ -95,11 +118,14 @@ async function deleteComment(postId: number, commentId: number) {
 
 export const PostApi = {
   createPost,
+  getPost,
   getPostList,
   getCommentList,
   createComment,
   likePost,
   unlikePost,
+  deletePost,
+  editPost,
   likeComment,
   unlikeComment,
   editComment,
