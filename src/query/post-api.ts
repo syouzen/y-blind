@@ -48,14 +48,47 @@ async function createComment(payload: ICreateCommentPayload) {
 
 async function likePost(postId: number) {
   const { data: result } = await api.post<IResultResponse>(
-    `/posts/${postId}/like`
+    `/posts/${postId}/likes`
   );
   return result;
 }
 
 async function unlikePost(postId: number) {
+  // toggle 방식으로 같은 api 사용
+  const { data: result } = await api.post<IResultResponse>(
+    `/posts/${postId}/likes`
+  );
+  return result;
+}
+
+async function likeComment(commentId: number) {
+  const { data: result } = await api.post<IResultResponse>(
+    `/comments/${commentId}/likes`
+  );
+  return result;
+}
+
+async function unlikeComment(commentId: number) {
+  // toggle 방식으로 같은 api 사용
+  const { data: result } = await api.post<IResultResponse>(
+    `/comments/${commentId}/likes`
+  );
+  return result;
+}
+
+async function editComment(postId: number, commentId: number, content: string) {
+  const { data: result } = await api.patch<IResultResponse>(
+    `posts/${postId}/comments/${commentId}`,
+    {
+      content,
+    }
+  );
+  return result;
+}
+
+async function deleteComment(postId: number, commentId: number) {
   const { data: result } = await api.delete<IResultResponse>(
-    `/posts/${postId}/like`
+    `posts/${postId}/comments/${commentId}`
   );
   return result;
 }
@@ -67,4 +100,8 @@ export const PostApi = {
   createComment,
   likePost,
   unlikePost,
+  likeComment,
+  unlikeComment,
+  editComment,
+  deleteComment,
 };

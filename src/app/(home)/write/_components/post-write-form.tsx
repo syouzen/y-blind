@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,8 @@ const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 export default function PostWriteForm() {
   const router = useRouter();
+  const queryClient = useQueryClient();
+
   const form = useForm<z.infer<typeof postSchema>>({
     resolver: zodResolver(postSchema),
     defaultValues: {
@@ -38,6 +40,7 @@ export default function PostWriteForm() {
   const { mutate: createPost } = useMutation({
     mutationFn: (payload: ICreatePostPayload) => PostApi.createPost(payload),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
       router.push("/");
     },
     onError: () => {

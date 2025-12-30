@@ -73,7 +73,7 @@ export function PostItem({ data }: PostItemProps) {
       <div className="flex items-center gap-[16px]">
         <button
           onClick={handleLike}
-          className="flex items-center gap-[4px] px-[12px] py-[6px] rounded-[8px] bg-gray50 hover:bg-gray100 transition-colors"
+          className="flex items-center gap-[4px] py-[6px] rounded-[8px] bg-gray50 hover:bg-gray100 transition-colors"
         >
           <span
             className={`text-[16px] ${isLiked ? "text-red500" : "text-gray600"}`}
@@ -90,11 +90,11 @@ export function PostItem({ data }: PostItemProps) {
         {/* NOTE 댓글 버튼 : 클릭 시 댓글 시트 노출 */}
         <button
           onClick={() => setIsCommentDialogOpen(true)}
-          className="flex items-center gap-[4px] px-[12px] py-[6px] rounded-[8px] bg-gray50 hover:bg-gray100 transition-colors"
+          className="flex items-center gap-[4px] py-[6px] rounded-[8px] bg-gray50 hover:bg-gray100 transition-colors"
         >
           <MessageCircle className="size-4" />
           <span className="font-body12m text-gray700">
-            {data.commentCount ?? 0}
+            {data.commentsCount ?? 0}
           </span>
         </button>
       </div>
