@@ -28,6 +28,7 @@ export default function SignUpForm() {
   const { mutate: signUp } = useMutation({
     mutationFn: (payload: ISignUpPayload) => AuthApi.signUp(payload),
     onSuccess: () => {
+      toast.success("회원가입에 성공했어요");
       router.push("/sign-in");
     },
     onError: () => {

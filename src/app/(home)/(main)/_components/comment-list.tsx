@@ -10,7 +10,7 @@ import { IComment } from "@/types/api-response";
 import CommentItem from "./comment-item";
 
 interface CommentListProps {
-  postId: string;
+  postId: number;
 }
 
 const CommentList = ({ postId }: CommentListProps) => {

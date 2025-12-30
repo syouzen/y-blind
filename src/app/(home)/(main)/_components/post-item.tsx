@@ -55,7 +55,9 @@ export function PostItem({ data }: PostItemProps) {
     <div className="flex flex-col gap-[12px] p-[16px] bg-white border-b border-gray200">
       {/* 사용자 정보 */}
       <div className="flex items-center justify-between">
-        <span className="font-heading14sb text-gray900">{data.userName}</span>
+        <span className="font-heading14sb text-gray900">
+          {data.user.username}
+        </span>
         <span className="font-body12r text-gray500">
           {calculateFromNow(data.createdAt)}
         </span>
@@ -63,7 +65,7 @@ export function PostItem({ data }: PostItemProps) {
 
       {/* 글 내용 */}
       <div
-        className="font-body14r text-gray800 whitespace-pre-wrap"
+        className="ql-content text-gray800"
         dangerouslySetInnerHTML={{ __html: data.content }}
       />
 

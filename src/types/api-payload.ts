@@ -22,13 +22,13 @@ export interface ICreatePostPayload {
 }
 
 export interface ICommentListPayload {
-  postId: string;
+  postId: number;
   page: number;
   limit: number;
 }
 
 export interface ICreateCommentPayload {
-  postId: string;
+  postId: number;
   content: string;
 }
 
