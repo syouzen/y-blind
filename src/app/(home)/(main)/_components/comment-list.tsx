@@ -19,19 +19,9 @@ const CommentList = ({ postId }: CommentListProps) => {
   );
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useSuspenseInfiniteQuery({
-      queryKey: ["comments", postId],
-      queryFn: ({ pageParam = 1 }) =>
-        PostApi.getCommentList({
-          postId,
-          page: pageParam,
-          limit: 50,
-        }),
-      getNextPageParam: (lastPage) => {
-        return lastPage.length === 50 ? lastPage.length + 1 : null;
-      },
-      initialPageParam: 1,
-    });
+    useSuspenseInfiniteQuery(
+      PostApi.getCommentListInfiniteQueryOptions(postId)
+    );
 
   const comments = data ? data.pages.flatMap((page) => page) : [];
 

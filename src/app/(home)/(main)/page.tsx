@@ -1,8 +1,13 @@
 import Link from "next/link";
 
+import { Suspense } from "@suspensive/react";
+import { SuspenseInfiniteQuery } from "@suspensive/react-query";
+
+import DefaultLoading from "@/app/_components/default-loading";
 import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
 import ErrorResetBoundary from "@/lib/error-reset-boundary";
+import { PostApi } from "@/query/post-api";
 
 import { PostList } from "./_components/post-list";
 
@@ -24,7 +29,18 @@ export default async function Home() {
 
       {/* 게시글 리스트 */}
       <ErrorResetBoundary>
-        <PostList />
+        <Suspense fallback={<DefaultLoading />}>
+          <SuspenseInfiniteQuery {...PostApi.getPostListInfiniteQueryOptions()}>
+            {({ data, fetchNextPage, hasNextPage, isFetchingNextPage }) => (
+              <PostList
+                posts={data?.pages.flatMap((page) => page.data) || []}
+                hasNextPage={hasNextPage}
+                isFetchingNextPage={isFetchingNextPage}
+                fetchNextPage={fetchNextPage}
+              />
+            )}
+          </SuspenseInfiniteQuery>
+        </Suspense>
       </ErrorResetBoundary>
     </div>
   );

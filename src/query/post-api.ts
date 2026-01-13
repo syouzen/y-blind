@@ -1,14 +1,14 @@
-import { queryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 
 import api from "@/lib/api";
 import {
   ICommentListPayload,
   ICreateCommentPayload,
   ICreatePostPayload,
-  IPostListPayload,
 } from "@/types/api-payload";
 import {
   IComment,
+  ICommentListResponse,
   IPost,
   IPostListResponse,
   IResultResponse,
@@ -28,25 +28,47 @@ const getPostQueryOptions = (postId: number) =>
     },
   });
 
-async function getPostList(payload: IPostListPayload) {
-  const { data: result } = await api.get<IPostListResponse>("/posts", {
-    params: payload,
+export const getPostListInfiniteQueryOptions = () =>
+  infiniteQueryOptions({
+    queryKey: ["posts"],
+    queryFn: async ({ pageParam = 1 }) => {
+      const { data: result } = await api.get<IPostListResponse>("/posts", {
+        params: {
+          page: pageParam,
+          limit: 50,
+        },
+      });
+      return result;
+    },
+    getNextPageParam: (lastPage) => {
+      if (lastPage.page < lastPage.totalPages) {
+        return lastPage.page + 1;
+      }
+      return null;
+    },
+    initialPageParam: 1,
   });
-  return result;
-}
 
-async function getCommentList(payload: ICommentListPayload) {
-  const { data: result } = await api.get<IComment[]>(
-    `/posts/${payload.postId}/comments`,
-    {
-      params: {
-        page: payload.page,
-        limit: payload.limit,
-      },
-    }
-  );
-  return result;
-}
+export const getCommentListInfiniteQueryOptions = (postId: number) =>
+  infiniteQueryOptions({
+    queryKey: ["comments", postId],
+    queryFn: async ({ pageParam = 1 }) => {
+      const { data: result } = await api.get<IComment[]>(
+        `/posts/${postId}/comments`,
+        {
+          params: {
+            page: pageParam,
+            limit: 50,
+          },
+        }
+      );
+      return result;
+    },
+    getNextPageParam: (lastPage) => {
+      return lastPage.length === 50 ? lastPage.length + 1 : null;
+    },
+    initialPageParam: 1,
+  });
 
 async function createComment(payload: ICreateCommentPayload) {
   const { data: result } = await api.post<IResultResponse>(
@@ -125,8 +147,8 @@ async function deleteComment(postId: number, commentId: number) {
 export const PostApi = {
   createPost,
   getPostQueryOptions,
-  getPostList,
-  getCommentList,
+  getPostListInfiniteQueryOptions,
+  getCommentListInfiniteQueryOptions,
   createComment,
   likePost,
   unlikePost,

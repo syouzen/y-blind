@@ -2,33 +2,26 @@
 
 import { Virtuoso } from "react-virtuoso";
 
-import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
-
 import Intersection from "@/components/intersection";
 import useVirtuosoSnapshot from "@/hooks/snapshot";
-import { PostApi } from "@/query/post-api";
 import { IPost } from "@/types/api-response";
 
 import { PostItem } from "./post-item";
 
-export function PostList() {
+interface PostListProps {
+  posts: IPost[];
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
+  fetchNextPage: () => void;
+}
+
+export function PostList({
+  posts,
+  hasNextPage,
+  isFetchingNextPage,
+  fetchNextPage,
+}: PostListProps) {
   const { virtuosoRef, snapshot } = useVirtuosoSnapshot("post-list-snapshot");
-
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useSuspenseInfiniteQuery({
-      queryKey: ["posts"],
-      queryFn: ({ pageParam = 1 }) =>
-        PostApi.getPostList({ page: pageParam, limit: 50 }),
-      getNextPageParam: (lastPage) => {
-        if (lastPage.page < lastPage.totalPages) {
-          return lastPage.page + 1;
-        }
-        return null;
-      },
-      initialPageParam: 1,
-    });
-
-  const posts = data ? data.pages.flatMap((page) => page.data) : [];
 
   return (
     <Virtuoso
