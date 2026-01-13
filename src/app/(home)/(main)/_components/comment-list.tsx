@@ -1,29 +1,27 @@
 import { Virtuoso } from "react-virtuoso";
 
-import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
-
 import Intersection from "@/components/intersection";
 import useVirtuosoSnapshot from "@/hooks/snapshot";
-import { PostApi } from "@/query/post-api";
 import { IComment } from "@/types/api-response";
 
 import CommentItem from "./comment-item";
 
 interface CommentListProps {
-  postId: number;
+  comments: IComment[];
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
+  fetchNextPage: () => void;
 }
 
-const CommentList = ({ postId }: CommentListProps) => {
+const CommentList = ({
+  comments,
+  hasNextPage,
+  isFetchingNextPage,
+  fetchNextPage,
+}: CommentListProps) => {
   const { virtuosoRef, snapshot } = useVirtuosoSnapshot(
     "comment-list-snapshot"
   );
-
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useSuspenseInfiniteQuery(
-      PostApi.getCommentListInfiniteQueryOptions(postId)
-    );
-
-  const comments = data ? data.pages.flatMap((page) => page) : [];
 
   return (
     <Virtuoso

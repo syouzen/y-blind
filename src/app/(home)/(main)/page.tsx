@@ -29,18 +29,16 @@ export default async function Home() {
 
       {/* 게시글 리스트 */}
       <ErrorResetBoundary>
-        <Suspense fallback={<DefaultLoading />}>
-          <SuspenseInfiniteQuery {...PostApi.getPostListInfiniteQueryOptions()}>
-            {({ data, fetchNextPage, hasNextPage, isFetchingNextPage }) => (
-              <PostList
-                posts={data?.pages.flatMap((page) => page.data) || []}
-                hasNextPage={hasNextPage}
-                isFetchingNextPage={isFetchingNextPage}
-                fetchNextPage={fetchNextPage}
-              />
-            )}
-          </SuspenseInfiniteQuery>
-        </Suspense>
+        <SuspenseInfiniteQuery {...PostApi.getPostListInfiniteQueryOptions()}>
+          {({ data, fetchNextPage, hasNextPage, isFetchingNextPage }) => (
+            <PostList
+              posts={data?.pages.flatMap((page) => page.data) || []}
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              fetchNextPage={fetchNextPage}
+            />
+          )}
+        </SuspenseInfiniteQuery>
       </ErrorResetBoundary>
     </div>
   );
