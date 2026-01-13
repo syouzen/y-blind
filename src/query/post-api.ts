@@ -1,3 +1,5 @@
+import { queryOptions } from "@tanstack/react-query";
+
 import api from "@/lib/api";
 import {
   ICommentListPayload,
@@ -17,10 +19,14 @@ async function createPost(payload: ICreatePostPayload) {
   return result;
 }
 
-async function getPost(postId: number) {
-  const { data: result } = await api.get<IPost>(`/posts/${postId}`);
-  return result;
-}
+const getPostQueryOptions = (postId: number) =>
+  queryOptions({
+    queryKey: ["posts", postId] as const,
+    queryFn: async () => {
+      const { data: result } = await api.get<IPost>(`/posts/${postId}`);
+      return result;
+    },
+  });
 
 async function getPostList(payload: IPostListPayload) {
   const { data: result } = await api.get<IPostListResponse>("/posts", {
@@ -118,7 +124,7 @@ async function deleteComment(postId: number, commentId: number) {
 
 export const PostApi = {
   createPost,
-  getPost,
+  getPostQueryOptions,
   getPostList,
   getCommentList,
   createComment,

@@ -30,8 +30,7 @@ export default function PostEditForm({ postId }: { postId: number }) {
   const queryClient = useQueryClient();
 
   const { data: post, isSuccess } = useQuery({
-    queryKey: ["posts", postId],
-    queryFn: () => PostApi.getPost(postId),
+    ...PostApi.getPostQueryOptions(postId),
     enabled: !!postId,
   });
 
