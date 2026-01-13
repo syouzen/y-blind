@@ -1,9 +1,9 @@
 "use client";
 
-import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useRouter } from "next/navigation";
 
+import { Suspense } from "@suspensive/react";
 import { useQueryErrorResetBoundary } from "@tanstack/react-query";
 
 import DefaultError from "@/app/_components/default-error";
