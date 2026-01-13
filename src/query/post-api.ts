@@ -1,14 +1,9 @@
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 
 import api from "@/lib/api";
-import {
-  ICommentListPayload,
-  ICreateCommentPayload,
-  ICreatePostPayload,
-} from "@/types/api-payload";
+import { ICreateCommentPayload, ICreatePostPayload } from "@/types/api-payload";
 import {
   IComment,
-  ICommentListResponse,
   IPost,
   IPostListResponse,
   IResultResponse,
