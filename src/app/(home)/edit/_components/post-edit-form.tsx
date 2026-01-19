@@ -46,8 +46,7 @@ export default function PostEditForm({ postId }: { postId: number }) {
   });
 
   const { mutate: editPost } = useMutation({
-    mutationFn: ({ postId, content }: { postId: number; content: string }) =>
-      PostApi.editPost(postId, content),
+    ...PostApi.editPostMutationOptions(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       router.push("/");

@@ -35,7 +35,7 @@ export function PostItem({ data }: PostItemProps) {
   const [isCommentDialogOpen, setIsCommentDialogOpen] = useState(false);
 
   const { mutate: likePost } = useMutation({
-    mutationFn: () => PostApi.likePost(data.id),
+    ...PostApi.likePostMutationOptions(),
     onSuccess: () => {
       setLikeCount((prev) => prev + 1);
       setIsLiked(true);
@@ -46,7 +46,7 @@ export function PostItem({ data }: PostItemProps) {
   });
 
   const { mutate: unlikePost } = useMutation({
-    mutationFn: () => PostApi.unlikePost(data.id),
+    ...PostApi.unlikePostMutationOptions(),
     onSuccess: () => {
       setLikeCount((prev) => prev - 1);
       setIsLiked(false);
@@ -57,7 +57,7 @@ export function PostItem({ data }: PostItemProps) {
   });
 
   const { mutate: deletePost } = useMutation({
-    mutationFn: () => PostApi.deletePost(data.id),
+    ...PostApi.deletePostMutationOptions(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       toast.success("게시글이 삭제되었어요");
@@ -69,9 +69,9 @@ export function PostItem({ data }: PostItemProps) {
 
   const handleLike = () => {
     if (isLiked) {
-      unlikePost();
+      unlikePost(data.id);
     } else {
-      likePost();
+      likePost(data.id);
     }
   };
 
@@ -84,7 +84,7 @@ export function PostItem({ data }: PostItemProps) {
       title: "게시글 삭제",
       content: "게시글을 삭제하시겠습니까?",
       onConfirm: () => {
-        deletePost();
+        deletePost(data.id);
       },
     });
   };

@@ -19,7 +19,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { postSchema } from "@/lib/scheme";
 import { PostApi } from "@/query/post-api";
-import { ICreatePostPayload } from "@/types/api-payload";
 
 export default function PostWriteForm() {
   const router = useRouter();
@@ -33,7 +32,7 @@ export default function PostWriteForm() {
   });
 
   const { mutate: createPost } = useMutation({
-    mutationFn: (payload: ICreatePostPayload) => PostApi.createPost(payload),
+    ...PostApi.createPostMutationOptions(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       router.push("/");

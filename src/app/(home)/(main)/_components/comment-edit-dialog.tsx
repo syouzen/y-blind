@@ -38,8 +38,7 @@ export function CommentEditDialog({
   }, [open, comment]);
 
   const { mutate: editComment, isPending } = useMutation({
-    mutationFn: (content: string) =>
-      PostApi.editComment(comment.postId, comment.id, content),
+    ...PostApi.editCommentMutationOptions(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["comments", comment.postId] });
       onOpenChange(false);
@@ -54,7 +53,7 @@ export function CommentEditDialog({
     e.preventDefault();
     if (!content.trim()) return;
 
-    editComment(content);
+    editComment({ postId: comment.postId, commentId: comment.id, content });
   };
 
   return (

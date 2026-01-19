@@ -1,4 +1,8 @@
-import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
+import {
+  infiniteQueryOptions,
+  mutationOptions,
+  queryOptions,
+} from "@tanstack/react-query";
 
 import api from "@/lib/api";
 import { ICreateCommentPayload, ICreatePostPayload } from "@/types/api-payload";
@@ -9,10 +13,16 @@ import {
   IResultResponse,
 } from "@/types/api-response";
 
-async function createPost(payload: ICreatePostPayload) {
-  const { data: result } = await api.post<IResultResponse>("/posts", payload);
-  return result;
-}
+const createPostMutationOptions = () =>
+  mutationOptions({
+    mutationFn: async (payload: ICreatePostPayload) => {
+      const { data: result } = await api.post<IResultResponse>(
+        "/posts",
+        payload
+      );
+      return result;
+    },
+  });
 
 const getPostQueryOptions = (postId: number) =>
   queryOptions({
@@ -65,92 +75,139 @@ export const getCommentListInfiniteQueryOptions = (postId: number) =>
     initialPageParam: 1,
   });
 
-async function createComment(payload: ICreateCommentPayload) {
-  const { data: result } = await api.post<IResultResponse>(
-    `/posts/${payload.postId}/comments`,
-    {
-      content: payload.content,
-    }
-  );
-  return result;
-}
+const createCommentMutationOptions = () =>
+  mutationOptions({
+    mutationFn: async (payload: ICreateCommentPayload) => {
+      const { data: result } = await api.post<IResultResponse>(
+        `/posts/${payload.postId}/comments`,
+        {
+          content: payload.content,
+        }
+      );
+      return result;
+    },
+  });
 
-async function likePost(postId: number) {
-  const { data: result } = await api.post<IResultResponse>(
-    `/posts/${postId}/likes`
-  );
-  return result;
-}
+const likePostMutationOptions = () =>
+  mutationOptions({
+    mutationFn: async (postId: number) => {
+      const { data: result } = await api.post<IResultResponse>(
+        `/posts/${postId}/likes`
+      );
+      return result;
+    },
+  });
 
-async function unlikePost(postId: number) {
-  // toggle 방식으로 같은 api 사용
-  const { data: result } = await api.post<IResultResponse>(
-    `/posts/${postId}/likes`
-  );
-  return result;
-}
+const unlikePostMutationOptions = () =>
+  mutationOptions({
+    // toggle 방식으로 같은 api 사용
+    mutationFn: async (postId: number) => {
+      const { data: result } = await api.post<IResultResponse>(
+        `/posts/${postId}/likes`
+      );
+      return result;
+    },
+  });
 
-async function deletePost(postId: number) {
-  const { data: result } = await api.delete<IResultResponse>(
-    `/posts/${postId}`
-  );
-  return result;
-}
+const deletePostMutationOptions = () =>
+  mutationOptions({
+    mutationFn: async (postId: number) => {
+      const { data: result } = await api.delete<IResultResponse>(
+        `/posts/${postId}`
+      );
+      return result;
+    },
+  });
 
-async function editPost(postId: number, content: string) {
-  const { data: result } = await api.patch<IResultResponse>(
-    `/posts/${postId}`,
-    {
+const editPostMutationOptions = () =>
+  mutationOptions({
+    mutationFn: async ({
+      postId,
       content,
-    }
-  );
-  return result;
-}
+    }: {
+      postId: number;
+      content: string;
+    }) => {
+      const { data: result } = await api.patch<IResultResponse>(
+        `/posts/${postId}`,
+        {
+          content,
+        }
+      );
+      return result;
+    },
+  });
 
-async function likeComment(commentId: number) {
-  const { data: result } = await api.post<IResultResponse>(
-    `/comments/${commentId}/likes`
-  );
-  return result;
-}
+const likeCommentMutationOptions = () =>
+  mutationOptions({
+    mutationFn: async (commentId: number) => {
+      const { data: result } = await api.post<IResultResponse>(
+        `/comments/${commentId}/likes`
+      );
+      return result;
+    },
+  });
 
-async function unlikeComment(commentId: number) {
-  // toggle 방식으로 같은 api 사용
-  const { data: result } = await api.post<IResultResponse>(
-    `/comments/${commentId}/likes`
-  );
-  return result;
-}
+const unlikeCommentMutationOptions = () =>
+  mutationOptions({
+    // toggle 방식으로 같은 api 사용
+    mutationFn: async (commentId: number) => {
+      const { data: result } = await api.post<IResultResponse>(
+        `/comments/${commentId}/likes`
+      );
+      return result;
+    },
+  });
 
-async function editComment(postId: number, commentId: number, content: string) {
-  const { data: result } = await api.patch<IResultResponse>(
-    `posts/${postId}/comments/${commentId}`,
-    {
+const editCommentMutationOptions = () =>
+  mutationOptions({
+    mutationFn: async ({
+      postId,
+      commentId,
       content,
-    }
-  );
-  return result;
-}
+    }: {
+      postId: number;
+      commentId: number;
+      content: string;
+    }) => {
+      const { data: result } = await api.patch<IResultResponse>(
+        `posts/${postId}/comments/${commentId}`,
+        {
+          content,
+        }
+      );
+      return result;
+    },
+  });
 
-async function deleteComment(postId: number, commentId: number) {
-  const { data: result } = await api.delete<IResultResponse>(
-    `posts/${postId}/comments/${commentId}`
-  );
-  return result;
-}
+const deleteCommentMutationOptions = () =>
+  mutationOptions({
+    mutationFn: async ({
+      postId,
+      commentId,
+    }: {
+      postId: number;
+      commentId: number;
+    }) => {
+      const { data: result } = await api.delete<IResultResponse>(
+        `posts/${postId}/comments/${commentId}`
+      );
+      return result;
+    },
+  });
 
 export const PostApi = {
-  createPost,
+  createPostMutationOptions,
   getPostQueryOptions,
   getPostListInfiniteQueryOptions,
   getCommentListInfiniteQueryOptions,
-  createComment,
-  likePost,
-  unlikePost,
-  deletePost,
-  editPost,
-  likeComment,
-  unlikeComment,
-  editComment,
-  deleteComment,
+  createCommentMutationOptions,
+  likePostMutationOptions,
+  unlikePostMutationOptions,
+  deletePostMutationOptions,
+  editPostMutationOptions,
+  likeCommentMutationOptions,
+  unlikeCommentMutationOptions,
+  editCommentMutationOptions,
+  deleteCommentMutationOptions,
 };
