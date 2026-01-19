@@ -1,11 +1,12 @@
 "use client";
 
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -20,9 +21,22 @@ import { Textarea } from "@/components/ui/textarea";
 import { postSchema } from "@/lib/scheme";
 import { PostApi } from "@/query/post-api";
 
-export default function PostWriteForm() {
+export default function PostEditForm({ postId }: { postId: number }) {
   const router = useRouter();
   const queryClient = useQueryClient();
+
+  const { data: post, isSuccess } = useQuery({
+    ...PostApi.getPostQueryOptions(postId),
+    enabled: !!postId,
+  });
+
+  useEffect(() => {
+    if (isSuccess && post) {
+      form.reset({
+        content: post.content,
+      });
+    }
+  }, [post]);
 
   const form = useForm<z.infer<typeof postSchema>>({
     resolver: zodResolver(postSchema),
@@ -31,20 +45,20 @@ export default function PostWriteForm() {
     },
   });
 
-  const { mutate: createPost } = useMutation({
-    ...PostApi.createPostMutationOptions(),
+  const { mutate: editPost } = useMutation({
+    ...PostApi.editPostMutationOptions(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       router.push("/");
+      toast.success("게시물을 수정했어요");
     },
     onError: () => {
-      toast.error("게시물 작성에 실패했어요");
+      toast.error("게시물 수정에 실패했어요");
     },
   });
 
   const onSubmit = (values: z.infer<typeof postSchema>) => {
-    console.log("게시물 작성:", values.content);
-    createPost({ title: "test", content: values.content });
+    editPost({ postId, content: values.content });
   };
 
   const contentLength = form.watch("content")?.length || 0;
@@ -79,7 +93,7 @@ export default function PostWriteForm() {
             className="w-full"
             disabled={!form.formState.isValid || contentLength === 0}
           >
-            작성 완료
+            수정 완료
           </Button>
         </form>
       </Form>

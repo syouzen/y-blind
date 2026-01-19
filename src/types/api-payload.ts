@@ -8,23 +8,28 @@ export interface ISignInPayload {
   pw: string;
 }
 
+export interface IKakaoSignInPayload {
+  token: string;
+}
+
 export interface IPostListPayload {
   page: number;
   limit: number;
 }
 
 export interface ICreatePostPayload {
+  title: string;
   content: string;
 }
 
 export interface ICommentListPayload {
-  postId: string;
+  postId: number;
   page: number;
   limit: number;
 }
 
 export interface ICreateCommentPayload {
-  postId: string;
+  postId: number;
   content: string;
 }
 

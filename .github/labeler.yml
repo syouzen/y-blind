@@ -2,11 +2,6 @@ enable:
   issues: false
   prs: true
 
-# 레이블을 성공적으로 붙이고 PR에 보낼 코멘트를 설정
-comments:
-  prs: |
-    ![LGTM](https://media0.giphy.com/media/v1.Y2lkPWZhYWJlMDM1eXY3b3plZHdwOGF1dzV3eGtxcmxlNDd0MDlrcmEybzBrcjY4eTh5diZlcD12MV9naWZzX3JhbmRvbSZjdD1n/3o7abGQa0aRJUurpII/200_d.gif)
-
 # 레이블
 labels:
   "bug":

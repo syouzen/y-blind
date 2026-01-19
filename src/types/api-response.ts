@@ -1,14 +1,21 @@
+export interface IUser {
+  id: number;
+  username: string;
+}
+
 export interface IResultResponse {
   result: boolean;
 }
 
 export interface IPost {
-  id: string;
-  userName: string;
+  id: number;
+  user: IUser;
   createdAt: string;
+  updatedAt: string;
   content: string;
   likeCount: number;
-  commentCount: number;
+  commentsCount: number;
+  isLikedByMe: boolean;
 }
 
 export interface IPostListResponse {
@@ -20,10 +27,16 @@ export interface IPostListResponse {
 }
 
 export interface IComment {
-  id: string;
-  userName: string;
+  id: number;
+  user: IUser;
   createdAt: string;
+  updatedAt: string;
   content: string;
+  likeCount: number;
+  isLikedByMe: boolean;
+  parentCommentId: string | null;
+  postId: number;
+  replies: IComment[];
 }
 
 export interface ICommentListResponse {
