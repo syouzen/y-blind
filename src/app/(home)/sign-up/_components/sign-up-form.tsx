@@ -20,13 +20,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { signSchema } from "@/lib/scheme";
 import { AuthApi } from "@/query/auth-api";
-import { ISignUpPayload } from "@/types/api-payload";
 
 export default function SignUpForm() {
   const router = useRouter();
 
   const { mutate: signUp } = useMutation({
-    mutationFn: (payload: ISignUpPayload) => AuthApi.signUp(payload),
+    ...AuthApi.signUpMutationOptions(),
     onSuccess: () => {
       toast.success("회원가입에 성공했어요");
       router.push("/sign-in");

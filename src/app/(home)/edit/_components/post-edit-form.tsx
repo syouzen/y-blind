@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,12 +17,9 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
 import { postSchema } from "@/lib/scheme";
 import { PostApi } from "@/query/post-api";
-
-import "react-quill-new/dist/quill.snow.css";
-
-const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 export default function PostEditForm({ postId }: { postId: number }) {
   const router = useRouter();
@@ -50,8 +46,7 @@ export default function PostEditForm({ postId }: { postId: number }) {
   });
 
   const { mutate: editPost } = useMutation({
-    mutationFn: ({ postId, content }: { postId: number; content: string }) =>
-      PostApi.editPost(postId, content),
+    ...PostApi.editPostMutationOptions(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       router.push("/");
@@ -68,36 +63,6 @@ export default function PostEditForm({ postId }: { postId: number }) {
 
   const contentLength = form.watch("content")?.length || 0;
 
-  const modules = useMemo(
-    () => ({
-      toolbar: [
-        [{ header: [1, 2, 3, false] }],
-        ["bold", "italic", "underline", "strike"],
-        [{ list: "ordered" }, { list: "bullet" }],
-        ["blockquote", "code-block"],
-        [{ color: [] }, { background: [] }],
-        ["link"],
-        ["clean"],
-      ],
-    }),
-    []
-  );
-
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "list",
-    "bullet",
-    "blockquote",
-    "code-block",
-    "color",
-    "background",
-    "link",
-  ];
-
   return (
     <div className="flex flex-col w-full h-full bg-white">
       <Form {...form}>
@@ -111,17 +76,11 @@ export default function PostEditForm({ postId }: { postId: number }) {
             render={({ field }) => (
               <FormItem className="flex-1 flex flex-col">
                 <FormControl>
-                  <div className="border border-solid border-gray200 rounded-[8px] overflow-hidden">
-                    <ReactQuill
-                      theme="snow"
-                      value={field.value}
-                      onChange={field.onChange}
-                      modules={modules}
-                      formats={formats}
-                      placeholder="당신의 속마음을 적어주세요..."
-                      className="quill-editor"
-                    />
-                  </div>
+                  <Textarea
+                    {...field}
+                    placeholder="당신의 속마음을 적어주세요..."
+                    className="w-full min-h-[200px] p-[16px] border border-solid border-gray200 rounded-[8px] resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -134,7 +93,7 @@ export default function PostEditForm({ postId }: { postId: number }) {
             className="w-full"
             disabled={!form.formState.isValid || contentLength === 0}
           >
-            작성 완료
+            수정 완료
           </Button>
         </form>
       </Form>

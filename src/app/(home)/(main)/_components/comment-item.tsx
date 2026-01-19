@@ -27,12 +27,12 @@ const CommentItem = ({ data }: CommentItemProps) => {
   const queryClient = useQueryClient();
 
   const [likeCount, setLikeCount] = useState(data.likeCount);
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(data.isLikedByMe);
 
   const [isCommentEditDialogOpen, setIsCommentEditDialogOpen] = useState(false);
 
   const { mutate: likeComment } = useMutation({
-    mutationFn: () => PostApi.likeComment(data.id),
+    ...PostApi.likeCommentMutationOptions(),
     onSuccess: () => {
       setLikeCount((prev) => prev + 1);
       setIsLiked(true);
@@ -43,7 +43,7 @@ const CommentItem = ({ data }: CommentItemProps) => {
   });
 
   const { mutate: unlikeComment } = useMutation({
-    mutationFn: () => PostApi.unlikeComment(data.id),
+    ...PostApi.unlikeCommentMutationOptions(),
     onSuccess: () => {
       setLikeCount((prev) => prev - 1);
       setIsLiked(false);
@@ -54,8 +54,7 @@ const CommentItem = ({ data }: CommentItemProps) => {
   });
 
   const { mutate: editComment } = useMutation({
-    mutationFn: (content: string) =>
-      PostApi.editComment(data.postId, data.id, content),
+    ...PostApi.editCommentMutationOptions(),
     onSuccess: () => {
       toast.success("댓글이 수정되었어요");
     },
@@ -65,7 +64,7 @@ const CommentItem = ({ data }: CommentItemProps) => {
   });
 
   const { mutate: deleteComment } = useMutation({
-    mutationFn: () => PostApi.deleteComment(data.postId, data.id),
+    ...PostApi.deleteCommentMutationOptions(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["comments", data.postId] });
       queryClient.invalidateQueries({ queryKey: ["posts"] });
@@ -78,9 +77,9 @@ const CommentItem = ({ data }: CommentItemProps) => {
 
   const handleLike = () => {
     if (isLiked) {
-      unlikeComment();
+      unlikeComment(data.id);
     } else {
-      likeComment();
+      likeComment(data.id);
     }
   };
 
@@ -93,7 +92,7 @@ const CommentItem = ({ data }: CommentItemProps) => {
       title: "댓글 삭제",
       content: "댓글을 삭제하시겠습니까?",
       onConfirm: () => {
-        deleteComment();
+        deleteComment({ postId: data.postId, commentId: data.id });
       },
     });
   };

@@ -34,7 +34,7 @@ const CommentList = ({ postId }: CommentListProps) => {
           )}
           components={{
             EmptyPlaceholder: () => (
-              <div className="flex flex-col items-center justify-center text-center gap-[16px] h-[calc(100dvh-54px)] text-gray-400">
+              <div className="flex flex-col items-center justify-center text-center gap-[16px] h-[450px] min-h-[450px] text-gray-400">
                 댓글이 없어요! 첫 댓글을 작성해보세요.
               </div>
             ),

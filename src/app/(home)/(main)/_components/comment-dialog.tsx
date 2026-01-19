@@ -16,7 +16,6 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import ErrorResetBoundary from "@/lib/error-reset-boundary";
 import { PostApi } from "@/query/post-api";
-import { ICreateCommentPayload } from "@/types/api-payload";
 
 import CommentList from "./comment-list";
 
@@ -38,8 +37,7 @@ export function CommentDialog({
   const queryClient = useQueryClient();
 
   const { mutate: createComment, isPending } = useMutation({
-    mutationFn: (payload: ICreateCommentPayload) =>
-      PostApi.createComment(payload),
+    ...PostApi.createCommentMutationOptions(),
     onSuccess: () => {
       setComment("");
       queryClient.invalidateQueries({ queryKey: ["comments", postId] });
