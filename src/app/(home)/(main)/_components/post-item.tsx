@@ -31,7 +31,7 @@ export function PostItem({ data }: PostItemProps) {
   const { showConfirm } = useEvent();
 
   const [likeCount, setLikeCount] = useState(data.likeCount);
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(data.isLikedByMe);
   const [isCommentDialogOpen, setIsCommentDialogOpen] = useState(false);
 
   const { mutate: likePost } = useMutation({

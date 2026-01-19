@@ -27,7 +27,7 @@ const CommentItem = ({ data }: CommentItemProps) => {
   const queryClient = useQueryClient();
 
   const [likeCount, setLikeCount] = useState(data.likeCount);
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(data.isLikedByMe);
 
   const [isCommentEditDialogOpen, setIsCommentEditDialogOpen] = useState(false);
 
