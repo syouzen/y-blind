@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 
 interface ErrorResetBoundaryProps {
   children: React.ReactNode;
+  clientOnly?: boolean;
   errorFallback?: React.ReactNode;
   suspenseFallback?: React.ReactNode;
 }
@@ -25,6 +26,7 @@ interface ErrorResetBoundaryProps {
  */
 const ErrorResetBoundary = ({
   children,
+  clientOnly = false,
   errorFallback = <DefaultError />,
   suspenseFallback = <DefaultLoading />,
 }: ErrorResetBoundaryProps) => {
@@ -46,7 +48,9 @@ const ErrorResetBoundary = ({
         </div>
       )}
     >
-      <Suspense fallback={suspenseFallback}>{children}</Suspense>
+      <Suspense clientOnly={clientOnly} fallback={suspenseFallback}>
+        {children}
+      </Suspense>
     </ErrorBoundary>
   );
 };

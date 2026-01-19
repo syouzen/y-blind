@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 
-import { SuspenseInfiniteQuery } from "@suspensive/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SendHorizontal } from "lucide-react";
 
@@ -75,18 +74,7 @@ export function CommentDialog({
             </div>
           }
         >
-          <SuspenseInfiniteQuery
-            {...PostApi.getCommentListInfiniteQueryOptions(postId)}
-          >
-            {({ data, fetchNextPage, hasNextPage, isFetchingNextPage }) => (
-              <CommentList
-                comments={data?.pages.flatMap((page) => page) || []}
-                hasNextPage={hasNextPage}
-                isFetchingNextPage={isFetchingNextPage}
-                fetchNextPage={fetchNextPage}
-              />
-            )}
-          </SuspenseInfiniteQuery>
+          <CommentList postId={postId} />
         </ErrorResetBoundary>
 
         {/* 댓글 입력 */}
